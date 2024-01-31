@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatajudClient.CrossCutting\DatajudClient.CrossCutting.csproj" />
+    <ProjectReference Include="..\DatajudClient.Domain\DatajudClient.Domain.csproj" />
   </ItemGroup>
 
 </Project>

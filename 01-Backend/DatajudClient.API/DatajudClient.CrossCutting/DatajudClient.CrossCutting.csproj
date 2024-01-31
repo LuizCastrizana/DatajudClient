@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Datajud.Infrastructure\DatajudClient.Infrastructure.csproj" />
+    <ProjectReference Include="..\DatajudClient.Domain\DatajudClient.Domain.csproj" />
+    <ProjectReference Include="..\DatajudClient.Infrastructure\DatajudClient.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
