@@ -1,0 +1,20 @@
+﻿using DatajudClient.Domain.Enum;
+
+namespace DatajudClient.Domain.DTO.Shared
+{
+    public class RetornoServico<T> where T : class
+    {
+        public T? Dados { get; set; }
+        public StatusRetornoEnum Status { get; set; }
+        public string Mensagem { get; set; }
+        public List<string>? Erros { get; set; }
+
+        public RetornoServico()
+        {
+            Dados = null;
+            Status = StatusRetornoEnum.SUCESSO;
+            Mensagem = string.Empty;
+            Erros = new List<string>();
+        }
+    }
+}

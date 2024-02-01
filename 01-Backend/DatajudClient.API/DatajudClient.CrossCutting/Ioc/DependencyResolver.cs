@@ -1,4 +1,5 @@
-﻿using DatajudClient.Domain.Interfaces.Repositories;
+﻿using AutoMapper;
+using DatajudClient.Domain.Interfaces.Repositories;
 using DatajudClient.Domain.Interfaces.Repositories.Processos;
 using DatajudClient.Domain.Interfaces.Services.Processos;
 using DatajudClient.Domain.Services;
@@ -15,11 +16,23 @@ namespace DatajudClient.CrossCutting.Ioc
     {
         public static IServiceCollection ResolveDependencies(this IServiceCollection services, IConfigurationRoot configurationBuilder)
         {
+            ConfigureAutoMapper(services);
             ConfigureDataBase(services, configurationBuilder);
             ConfigureRepositories(services);
             ConfigureServices(services);
 
             return services;
+        }
+
+        private static void ConfigureAutoMapper(IServiceCollection services)
+        {
+            var autoMappercfg = new MapperConfiguration(config =>
+            {
+                config.AllowNullDestinationValues = false;
+                config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+                config.AddProfile(new AutoMapperConfig());
+            });
+            services.AddSingleton(autoMappercfg.CreateMapper());
         }
 
         private static void ConfigureDataBase(IServiceCollection services, IConfigurationRoot configurationBuilder)

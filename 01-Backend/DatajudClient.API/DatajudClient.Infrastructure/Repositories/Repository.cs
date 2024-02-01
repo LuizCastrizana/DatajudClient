@@ -29,9 +29,9 @@ namespace DatajudClient.Infrastructure.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public virtual IEnumerable<T> Obter(Expression<Func<T, bool>> predicate)
+        public virtual List<T> Obter(Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.Where(predicate).Where(x => x.Ativo);
+            return _dbSet.Where(predicate).Where(x => x.Ativo).ToList();
         }
 
         public virtual async Task<List<T>> ObterAsync(Expression<Func<T, bool>> predicate)

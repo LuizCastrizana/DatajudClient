@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatajudClient.Domain", "Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatajudClient.CrossCutting", "DatajudClient.CrossCutting\DatajudClient.CrossCutting.csproj", "{7241EFA1-5365-4785-99DA-5E98343E5175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatajudClient.Infrastructure", "DatajudClient.Infrastructure\DatajudClient.Infrastructure.csproj", "{9C79ABD3-F33B-4D1F-9F6B-A7463B6FE07C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatajudClient.Infrastructure", "DatajudClient.Infrastructure\DatajudClient.Infrastructure.csproj", "{60E22D12-CB3B-4837-8DD1-A5403EAE1F5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{7241EFA1-5365-4785-99DA-5E98343E5175}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7241EFA1-5365-4785-99DA-5E98343E5175}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7241EFA1-5365-4785-99DA-5E98343E5175}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C79ABD3-F33B-4D1F-9F6B-A7463B6FE07C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C79ABD3-F33B-4D1F-9F6B-A7463B6FE07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C79ABD3-F33B-4D1F-9F6B-A7463B6FE07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C79ABD3-F33B-4D1F-9F6B-A7463B6FE07C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60E22D12-CB3B-4837-8DD1-A5403EAE1F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60E22D12-CB3B-4837-8DD1-A5403EAE1F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60E22D12-CB3B-4837-8DD1-A5403EAE1F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60E22D12-CB3B-4837-8DD1-A5403EAE1F5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,7 +49,7 @@ Global
 		{35A23EE2-5498-4491-8265-093F183187EB} = {54560A4C-DFC2-4DC0-A1F7-2A8ACCE40B17}
 		{F9A56833-AF45-4552-AA35-23F0163722A2} = {6B634603-6B78-4AA1-9F8B-E3EBD0AC5CF2}
 		{7241EFA1-5365-4785-99DA-5E98343E5175} = {0932BACA-5B34-4C5C-96B7-0660183B37A7}
-		{9C79ABD3-F33B-4D1F-9F6B-A7463B6FE07C} = {81332C7E-C1FB-4636-B42B-E7F69ECFBA55}
+		{60E22D12-CB3B-4837-8DD1-A5403EAE1F5A} = {81332C7E-C1FB-4636-B42B-E7F69ECFBA55}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C337DF8E-AE6B-47DA-AAE4-73E2514B8FF6}

@@ -8,7 +8,7 @@
         public string Comarca { get; set; }
         public string Estado { get; set; }
         public string Observacao { get; set; }
-        public virtual List<AndamentoProcesso> Andamentos { get; set; }
+        public virtual List<AndamentoProcesso>? Andamentos { get; set; }
 
         public Processo()
         {

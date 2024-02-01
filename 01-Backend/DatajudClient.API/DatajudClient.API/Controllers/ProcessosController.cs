@@ -1,4 +1,6 @@
-﻿using DatajudClient.Domain.Interfaces.Services.Processos;
+﻿using DatajudClient.API.Extensions;
+using DatajudClient.Domain.DTO.Processos;
+using DatajudClient.Domain.Interfaces.Services.Processos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatajudClient.API.Controllers
@@ -13,5 +15,9 @@ namespace DatajudClient.API.Controllers
         {
             _processoService = processoService;
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] IEnumerable<CreateProcessoDTO> processos) => 
+            this.TratarRespostaServico(_processoService.IncluirProcessos(processos));
     }
 }

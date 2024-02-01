@@ -22,7 +22,7 @@ namespace DatajudClient.Domain.Interfaces.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>Lista de objetos.</returns>
-        IEnumerable<T> Obter(Expression<Func<T, bool>> predicate);
+        List<T> Obter(Expression<Func<T, bool>> predicate);
         /// <summary>
         /// Obtem uma lista de objetos de acordo com o predicado.
         /// </summary>
@@ -34,11 +34,12 @@ namespace DatajudClient.Domain.Interfaces.Repositories
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>Número de registros excluidos.</returns>
-        int Excluir(T obj, bool exclusaoFisica = false);/// <summary>
-                                                        /// Exclui um objeto do banco de dados.
-                                                        /// </summary>
-                                                        /// <param name="obj"></param>
-                                                        /// <returns>Número de registros excluidos.</returns>
+        int Excluir(T obj, bool exclusaoFisica = false);
+        /// <summary>
+        /// Exclui um objeto do banco de dados.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>Número de registros excluidos.</returns>
         Task<int> ExcluirAsync(T obj, bool exclusaoFisica = false);
         /// <summary>
         /// Salva as alterações no banco de dados.

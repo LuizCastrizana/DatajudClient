@@ -1,6 +1,6 @@
 ﻿namespace DatajudClient.Domain.Models.Processos
 {
-    public class ComplementoAndamento
+    public class ComplementoAndamento : ModelBase
     {
         public int Codigo { get; set; }
         public int Valor { get; set; }
