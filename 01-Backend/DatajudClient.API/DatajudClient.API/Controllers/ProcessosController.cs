@@ -1,6 +1,6 @@
 ﻿using DatajudClient.API.Extensions;
 using DatajudClient.Domain.DTO.Processos;
-using DatajudClient.Domain.Interfaces.Services.Processos;
+using DatajudClient.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatajudClient.API.Controllers

@@ -2,8 +2,8 @@
 using DatajudClient.Domain.DTO.Processos;
 using DatajudClient.Domain.DTO.Shared;
 using DatajudClient.Domain.Enum;
-using DatajudClient.Domain.Interfaces.Repositories.Processos;
-using DatajudClient.Domain.Interfaces.Services.Processos;
+using DatajudClient.Domain.Interfaces.Repositories;
+using DatajudClient.Domain.Interfaces.Services;
 using DatajudClient.Domain.Models.Processos;
 
 namespace DatajudClient.Domain.Services

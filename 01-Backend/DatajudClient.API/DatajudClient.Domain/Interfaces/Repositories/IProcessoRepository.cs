@@ -1,7 +1,7 @@
 ﻿using DatajudClient.Domain.Models.Processos;
 using System.Linq.Expressions;
 
-namespace DatajudClient.Domain.Interfaces.Repositories.Processos
+namespace DatajudClient.Domain.Interfaces.Repositories
 {
     public interface IProcessoRepository : IRepository<Processo>
     {

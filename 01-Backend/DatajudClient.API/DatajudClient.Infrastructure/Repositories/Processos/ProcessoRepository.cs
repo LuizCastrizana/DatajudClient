@@ -1,4 +1,4 @@
-﻿using DatajudClient.Domain.Interfaces.Repositories.Processos;
+﻿using DatajudClient.Domain.Interfaces.Repositories;
 using DatajudClient.Domain.Models.Processos;
 using DatajudClient.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;

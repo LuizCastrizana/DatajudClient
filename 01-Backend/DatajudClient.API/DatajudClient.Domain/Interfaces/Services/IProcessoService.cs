@@ -1,7 +1,7 @@
 ﻿using DatajudClient.Domain.DTO.Processos;
 using DatajudClient.Domain.DTO.Shared;
 
-namespace DatajudClient.Domain.Interfaces.Services.Processos
+namespace DatajudClient.Domain.Interfaces.Services
 {
     public interface IProcessoService
     {
