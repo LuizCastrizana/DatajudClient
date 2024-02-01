@@ -29,15 +29,11 @@ namespace DatajudClient.Infrastructure.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public virtual List<T> Obter(Expression<Func<T, bool>> predicate)
-        {
-            return _dbSet.Where(predicate).Where(x => x.Ativo).ToList();
-        }
+        public virtual List<T> Obter(Expression<Func<T, bool>> predicate) => 
+            _dbSet.Where(predicate).Where(x => x.Ativo).ToList();
 
-        public virtual async Task<List<T>> ObterAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await _dbSet.Where(predicate).Where(x => x.Ativo).ToListAsync();
-        }
+        public virtual async Task<List<T>> ObterAsync(Expression<Func<T, bool>> predicate) =>
+            await _dbSet.Where(predicate).Where(x => x.Ativo).ToListAsync();
 
         public virtual int Excluir(T obj, bool exclusaoFisica = false)
         {
@@ -69,14 +65,8 @@ namespace DatajudClient.Infrastructure.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public virtual int SalvarAlteracoes()
-        {
-            return _dbContext.SaveChanges();
-        }
+        public virtual int SalvarAlteracoes() => _dbContext.SaveChanges();
 
-        public virtual async Task<int> SalvarAlteracoesAsync()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
+        public virtual async Task<int> SalvarAlteracoesAsync() => await _dbContext.SaveChangesAsync();
     }
 }
