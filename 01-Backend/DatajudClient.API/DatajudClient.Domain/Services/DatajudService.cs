@@ -15,7 +15,7 @@ namespace DatajudClient.Domain.Services
         {
             _httpClient = httpClient;
         }
-        public ResponseDatajudDTO ObterDadosProcesso(Processo processo)
+        public async Task<ResponseDatajudDTO> ObterDadosProcessoAsync(Processo processo)
         {
             var resposta = new ResponseDatajudDTO();
 
@@ -31,7 +31,7 @@ namespace DatajudClient.Domain.Services
                         }
                     }
                 };
-                var retornoDatajud = _httpClient.ExecutarRequisicaoAsync(processo.Tribunal.EndpointConsultaNumero, HttpMethod.Post, request).Result;
+                var retornoDatajud = await _httpClient.ExecutarRequisicaoAsync(processo.Tribunal.EndpointConsultaNumero, HttpMethod.Post, request);
                 if (retornoDatajud.StatusCode != HttpStatusCode.OK)
                     throw new Exception("Erro ao obter dados do processo no Datajud");
                 resposta = JsonConvert.DeserializeObject<ResponseDatajudDTO>(retornoDatajud.Content);

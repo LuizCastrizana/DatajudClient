@@ -44,8 +44,8 @@ namespace DatajudClient.HttpClient
             }
             catch (Exception ex)
             {
-                // TODO: log
-                throw new HttpClientException("Erro ao executar requisição. ", ex, uri, metodo.ToString(), Convert.ToString(_requestMessage.Content));
+                var content = _requestMessage != null && _requestMessage.Content != null ? await _requestMessage.Content.ReadAsStringAsync() : string.Empty;
+                throw new HttpClientException("Erro ao executar requisição. ", ex, uri, metodo.ToString(), Convert.ToString(content));
             }
 
             return retorno;
@@ -70,7 +70,6 @@ namespace DatajudClient.HttpClient
             }
             catch (Exception ex)
             {
-                //log
                 throw new HttpClientException("Erro ao executar requisição. ", ex, uri, metodo.ToString());
             }
 
@@ -100,7 +99,6 @@ namespace DatajudClient.HttpClient
             }
             catch (Exception ex)
             {
-                //log
                 throw new HttpClientException("Erro ao executar requisição. ", ex, uri, metodo.ToString());
             }
 
@@ -127,8 +125,8 @@ namespace DatajudClient.HttpClient
             }
             catch (Exception ex)
             {
-                // TODO: log
-                throw new HttpClientException("Erro ao executar requisição. ", ex, uri, metodo.ToString(), Convert.ToString(_requestMessage.Content));
+                var content = _requestMessage != null && _requestMessage.Content != null ? await _requestMessage.Content.ReadAsStringAsync() : string.Empty;
+                throw new HttpClientException("Erro ao executar requisição. ", ex, uri, metodo.ToString(), Convert.ToString(content));
             }
 
             return retorno;

@@ -7,6 +7,7 @@ using DatajudClient.Domain.Interfaces.Repositories;
 using DatajudClient.Domain.Interfaces.Services;
 using DatajudClient.Domain.Models.Processos;
 using DatajudClient.Domain.Models.Tribunais;
+using System.Collections.Concurrent;
 
 namespace DatajudClient.Domain.Services
 {
@@ -25,34 +26,34 @@ namespace DatajudClient.Domain.Services
             _mapper = mapper;
         }
 
-        public RetornoServico<List<ReadProcessoDTO>> IncluirProcessos(IEnumerable<CreateProcessoDTO> dtos)
+        public async Task<RetornoServico<List<ReadProcessoDTO>>> IncluirProcessosAsync(IEnumerable<CreateProcessoDTO> dtos)
         {
             var retorno = new RetornoServico<List<ReadProcessoDTO>>();
 
             try
             {
-                var processos = _mapper.Map<IEnumerable<Processo>>(dtos);
-                var listProcessoErro = new List<Processo>();
+                var processos = new ConcurrentBag<Processo>(_mapper.Map<IEnumerable<Processo>>(dtos));
+                var listProcessoErro = new ConcurrentBag<Processo>();
 
-                Parallel.ForEach(processos, (processo) =>
+                await Parallel.ForEachAsync(processos, async (processo, ct) =>
                 {
-                    if (_processoRepository.Adicionar(processo) == 0)
+                    if (await _processoRepository.AdicionarAsync(processo) == 0)
                         listProcessoErro.Add(processo);
                 });
 
-                var processosSucesso = processos.Except(listProcessoErro);
+                var processosSucesso = new ConcurrentBag<Processo>(processos.Except(listProcessoErro));
 
                 var listProcessosErroDatajud = new List<Processo>();
 
-                Parallel.ForEach(processosSucesso, (processo) =>
+                await Parallel.ForEachAsync(processosSucesso, async (processo, ct) =>
                 {
                     try
                     {
-                        var retornoDatajud = _datajudService.ObterDadosProcesso(processo);
+                        var retornoDatajud = await _datajudService.ObterDadosProcessoAsync(processo);
 
                         if (retornoDatajud != null)
                         {
-                            ProcessarRetornoDatajud(retornoDatajud, processo);
+                            await ProcessarRetornoDatajud(retornoDatajud, processo);
                         }
                         else
                         {
@@ -94,23 +95,23 @@ namespace DatajudClient.Domain.Services
             return retorno;
         }
 
-        public RetornoServico<List<ReadProcessoDTO>> AtualizarProcessos(UpdateProcessoDTO dto)
+        public async Task<RetornoServico<List<ReadProcessoDTO>>> AtualizarProcessosAsync(UpdateProcessoDTO dto)
         {
             var retorno = new RetornoServico<List<ReadProcessoDTO>>();
             try
             {
-                Parallel.ForEach(dto.numeros, (numero) =>
-                {
-                    var listProcessoErro = new List<string>();
+                var listProcessoErro = new ConcurrentBag<string>();
 
+                await Parallel.ForEachAsync(dto.numeros, async (numero, ct) =>
+                {
                     var processo = _processoRepository.Obter(x => x.NumeroProcesso == numero).FirstOrDefault();
 
                     if (processo != null)
                     {
-                        var retornoDatajud = _datajudService.ObterDadosProcesso(processo);
+                        var retornoDatajud = await _datajudService.ObterDadosProcessoAsync(processo);
                         if (retornoDatajud != null)
                         {
-                            ProcessarRetornoDatajud(retornoDatajud, processo);
+                            await ProcessarRetornoDatajud(retornoDatajud, processo);
                         }
                         else
                         {
@@ -121,20 +122,20 @@ namespace DatajudClient.Domain.Services
                     {
                         listProcessoErro.Add(numero);
                     }
-
-                    if (listProcessoErro.Count > 0)
-                    {
-                        retorno.Erros = listProcessoErro;
-                        retorno.Status = StatusRetornoEnum.ERRO;
-                        retorno.Mensagem = "Alguns processos não foram atualizados corretamente.";
-                    }
-                    else
-                    {
-                        retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(_processoRepository.Obter(x => dto.numeros.Contains(x.NumeroProcesso))).ToList();
-                        retorno.Status = StatusRetornoEnum.SUCESSO;
-                        retorno.Mensagem = "Processos atualizados com sucesso";
-                    }
                 });
+
+                if (listProcessoErro.Count > 0)
+                {
+                    retorno.Erros = listProcessoErro.ToList();
+                    retorno.Status = StatusRetornoEnum.ERRO;
+                    retorno.Mensagem = "Alguns processos não foram atualizados corretamente.";
+                }
+                else
+                {
+                    retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(_processoRepository.Obter(x => dto.numeros.Contains(x.NumeroProcesso))).ToList();
+                    retorno.Status = StatusRetornoEnum.SUCESSO;
+                    retorno.Mensagem = "Processos atualizados com sucesso";
+                }
             }
             catch (Exception ex)
             {
@@ -147,17 +148,17 @@ namespace DatajudClient.Domain.Services
 
         #region Métodos Privados
 
-        private void ProcessarRetornoDatajud(ResponseDatajudDTO respostaDatajud, Processo processo)
+        private async Task ProcessarRetornoDatajud(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
-            MapearAndamentosDoProcesso(respostaDatajud, processo);
-            _processoRepository.SalvarAlteracoes();
+            await MapearAndamentosDoProcesso(respostaDatajud, processo);
+            await _processoRepository.SalvarAlteracoesAsync();
         }
 
-        private void MapearAndamentosDoProcesso(ResponseDatajudDTO respostaDatajud, Processo processo)
+        private async Task MapearAndamentosDoProcesso(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
-            var datajudAndamentos = respostaDatajud.hits.hits.Select(x => x._source.movimentos).FirstOrDefault();
+            var datajudAndamentos = new ConcurrentBag<Movimento>(respostaDatajud.hits.hits.Select(x => x._source.movimentos).First());
 
-            Parallel.ForEach(datajudAndamentos, (andamento) =>
+            await Parallel.ForEachAsync(datajudAndamentos, async (andamento, ct) =>
             {
                 var andamentoExistente = processo.Andamentos != null && processo.Andamentos.Select(x => x.DataHora).Contains(andamento.dataHora);
 
@@ -169,8 +170,10 @@ namespace DatajudClient.Domain.Services
                         Descricao = andamento.nome,
                         DataHora = andamento.dataHora,
                     };
-                    Parallel.ForEach(andamento.complementosTabelados, (complemento) =>
+                    await Parallel.ForEachAsync(andamento.complementosTabelados, async (complemento, ct) =>
                     {
+                        if (andamentoProcesso.Complementos == null)
+                            andamentoProcesso.Complementos = new List<ComplementoAndamento>();
                         andamentoProcesso.Complementos.Add(new ComplementoAndamento
                         {
                             Codigo = complemento.codigo,

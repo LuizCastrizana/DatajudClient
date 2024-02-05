@@ -17,11 +17,11 @@ namespace DatajudClient.API.Controllers
         }
 
         [HttpPost("CadastrarProcessos")]
-        public IActionResult Post([FromBody] IEnumerable<CreateProcessoDTO> dtos) => 
-            this.TratarRespostaServico(_processoService.IncluirProcessos(dtos));
+        public async Task<IActionResult> Post([FromBody] IEnumerable<CreateProcessoDTO> dtos) => 
+            this.TratarRespostaServico(await _processoService.IncluirProcessosAsync(dtos));
 
         [HttpPost("AtualizarProcessos")]
-        public IActionResult Put([FromBody] UpdateProcessoDTO dto) => 
-            this.TratarRespostaServico(_processoService.AtualizarProcessos(dto));
+        public async Task<IActionResult> Put([FromBody] UpdateProcessoDTO dto) => 
+            this.TratarRespostaServico(await _processoService.AtualizarProcessosAsync(dto));
     }
 }

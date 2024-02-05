@@ -16,7 +16,6 @@
             DataHora = DateTime.Now;
             ProcessoId = 0;
             Processo = new Processo();
-            Complementos = new List<ComplementoAndamento>();
         }
     }
 }

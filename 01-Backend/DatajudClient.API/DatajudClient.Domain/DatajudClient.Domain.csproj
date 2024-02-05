@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\ClientHttp\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DatajudClient.HttpClient\DatajudClient.HttpClient.csproj" />
   </ItemGroup>
 

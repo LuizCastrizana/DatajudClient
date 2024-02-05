@@ -5,6 +5,11 @@ namespace DatajudClient.Domain.Interfaces.Services
 {
     public interface IDatajudService
     {
-        ResponseDatajudDTO ObterDadosProcesso(Processo processo);
+        /// <summary>
+        /// Obtém os dados do processo no Datajud.
+        /// </summary>
+        /// <param name="processo"></param>
+        /// <returns></returns>
+        Task<ResponseDatajudDTO> ObterDadosProcessoAsync(Processo processo);
     }
 }
