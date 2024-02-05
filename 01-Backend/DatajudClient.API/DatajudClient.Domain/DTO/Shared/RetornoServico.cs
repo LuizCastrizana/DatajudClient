@@ -11,10 +11,8 @@ namespace DatajudClient.Domain.DTO.Shared
 
         public RetornoServico()
         {
-            Dados = null;
             Status = StatusRetornoEnum.SUCESSO;
             Mensagem = string.Empty;
-            Erros = new List<string>();
         }
     }
 }

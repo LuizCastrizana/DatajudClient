@@ -2,9 +2,9 @@
 using DatajudClient.Domain.Interfaces.Repositories;
 using DatajudClient.Domain.Interfaces.Services;
 using DatajudClient.Domain.Services;
+using DatajudClient.HttpClient;
 using DatajudClient.Infrastructure.DatabaseContext;
 using DatajudClient.Infrastructure.Repositories;
-using DatajudClient.Infrastructure.Repositories.Processos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,11 +49,14 @@ namespace DatajudClient.CrossCutting.Ioc
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddTransient<IProcessoRepository, ProcessoRepository>();
+            services.AddTransient<ITribunalRepository, TribunalRepository>();
         }
 
         private static void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IHttpClient, HttpClient.HttpClient>();
             services.AddTransient<IProcessoService, ProcessoService>();
+            services.AddTransient<IDatajudService, DatajudService>();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace DatajudClient.Domain.Models.Processos
+﻿using DatajudClient.Domain.Models.Tribunais;
+
+namespace DatajudClient.Domain.Models.Processos
 {
     public class Processo : ModelBase
     {
@@ -8,6 +10,8 @@
         public string Comarca { get; set; }
         public string Estado { get; set; }
         public string Observacao { get; set; }
+        public int TribunalId { get; set; }
+        public virtual Tribunal Tribunal { get; set; }
         public virtual List<AndamentoProcesso>? Andamentos { get; set; }
 
         public Processo()
@@ -18,6 +22,7 @@
             Comarca = string.Empty;
             Estado = string.Empty;
             Observacao = string.Empty;
+            Tribunal = new Tribunal();
             Andamentos = new List<AndamentoProcesso>();
         }
 

@@ -13,6 +13,8 @@ namespace DatajudClient.Domain.DTO.Processos
         public string Comarca { get; set; }
         [Required]
         public string Estado { get; set; }
+        [Required]
+        public int TribunalId { get; set; }
         public string? Observacao { get; set; }
     }
 }

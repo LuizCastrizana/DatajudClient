@@ -4,7 +4,7 @@ using DatajudClient.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace DatajudClient.Infrastructure.Repositories.Processos
+namespace DatajudClient.Infrastructure.Repositories
 {
     public class ProcessoRepository : Repository<Processo>, IProcessoRepository
     {
@@ -17,6 +17,15 @@ namespace DatajudClient.Infrastructure.Repositories.Processos
                 .Where(x => x.Ativo)
                 .Include(x => x.Andamentos).ThenInclude(x => x.Complementos)
                 .ToList();
+        }
+
+        public override async Task<List<Processo>> ObterAsync(Expression<Func<Processo, bool>> predicate)
+        {
+            return await _dbSet
+                .Where(predicate)
+                .Where(x => x.Ativo)
+                .Include(x => x.Andamentos).ThenInclude(x => x.Complementos)
+                .ToListAsync();
         }
     }
 }

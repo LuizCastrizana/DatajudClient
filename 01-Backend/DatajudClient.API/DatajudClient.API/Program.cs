@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureModelStateResponse();
+builder.Services.AddHttpClient();
 builder.Services.ResolveDependencies(builder.Configuration);
 
 var app = builder.Build();

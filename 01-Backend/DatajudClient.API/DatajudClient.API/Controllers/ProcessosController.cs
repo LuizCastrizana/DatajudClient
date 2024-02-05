@@ -16,8 +16,12 @@ namespace DatajudClient.API.Controllers
             _processoService = processoService;
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] IEnumerable<CreateProcessoDTO> processos) => 
-            this.TratarRespostaServico(_processoService.IncluirProcessos(processos));
+        [HttpPost("CadastrarProcessos")]
+        public IActionResult Post([FromBody] IEnumerable<CreateProcessoDTO> dtos) => 
+            this.TratarRespostaServico(_processoService.IncluirProcessos(dtos));
+
+        [HttpPost("AtualizarProcessos")]
+        public IActionResult Put([FromBody] UpdateProcessoDTO dto) => 
+            this.TratarRespostaServico(_processoService.AtualizarProcessos(dto));
     }
 }

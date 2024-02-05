@@ -8,6 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\ClientHttp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DatajudClient.HttpClient\DatajudClient.HttpClient.csproj" />
   </ItemGroup>
 
 </Project>
