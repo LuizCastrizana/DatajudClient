@@ -1,5 +1,7 @@
 ﻿using DatajudClient.Domain.Models;
+using DatajudClient.Domain.Models.Endereco;
 using DatajudClient.Domain.Models.Processos;
+using DatajudClient.Domain.Models.Tribunais;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatajudClient.Infrastructure.DatabaseContext
@@ -16,6 +18,21 @@ namespace DatajudClient.Infrastructure.DatabaseContext
 
         #endregion
 
+        #region DbSet Endereco
+
+        public DbSet<Estado> Estado { get; set; }
+        public DbSet<Municipio> Municipio { get; set; }
+        public DbSet<Endereco> Endereco { get; set; }
+
+        #endregion
+
+        #region DbSet Tribunais
+
+        public DbSet<Tribunal> Tribunal { get; set; }
+        public DbSet<CategoriaTribunal> CategoriaTribunal { get; set; }
+
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             #region Processos
@@ -29,6 +46,34 @@ namespace DatajudClient.Infrastructure.DatabaseContext
                 .HasMany(x=>x.Complementos)
                 .WithOne(x=>x.AndamentoProcesso)
                 .HasForeignKey(x=>x.AndamentoProcessoId);
+
+            #endregion
+
+            #region Endereco
+
+            builder.Entity<Estado>()
+                .HasMany(x=>x.Municipios)
+                .WithOne(x=>x.Estado)
+                .HasForeignKey(x=>x.EstadoId);
+            
+            builder.Entity<Municipio>()
+                .HasMany(x=>x.Enderecos)
+                .WithOne(x=>x.Municipio)
+                .HasForeignKey(x=>x.MunicipioId);
+
+            #endregion
+
+            #region Tribunais
+
+            builder.Entity<Estado>()
+                .HasMany(x=>x.Tribunais)
+                .WithOne(x=>x.Estado)
+                .HasForeignKey(x=>x.EstadoId);
+
+            builder.Entity<CategoriaTribunal>()
+                .HasMany(x=>x.Tribunais)
+                .WithOne(x=>x.Categoria)
+                .HasForeignKey(x=>x.CategoriaId);   
 
             #endregion
         }

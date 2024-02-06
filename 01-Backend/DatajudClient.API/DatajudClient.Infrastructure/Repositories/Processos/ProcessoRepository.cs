@@ -15,6 +15,8 @@ namespace DatajudClient.Infrastructure.Repositories
             return _dbSet
                 .Where(predicate)
                 .Where(x => x.Ativo)
+                .Include(x => x.Tribunal).ThenInclude(x => x.Categoria)
+                .Include(x => x.Tribunal).ThenInclude(x => x.Estado)
                 .Include(x => x.Andamentos).ThenInclude(x => x.Complementos)
                 .ToList();
         }
@@ -24,6 +26,8 @@ namespace DatajudClient.Infrastructure.Repositories
             return await _dbSet
                 .Where(predicate)
                 .Where(x => x.Ativo)
+                .Include(x => x.Tribunal).ThenInclude(x => x.Categoria)
+                .Include(x => x.Tribunal).ThenInclude(x => x.Estado)
                 .Include(x => x.Andamentos).ThenInclude(x => x.Complementos)
                 .ToListAsync();
         }

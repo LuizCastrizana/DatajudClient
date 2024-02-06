@@ -1,4 +1,6 @@
 ﻿using DatajudClient.Domain.DTO.Datajud;
+using DatajudClient.Domain.DTO.Shared;
+using DatajudClient.Domain.Enum;
 using DatajudClient.Domain.Interfaces.Services;
 using DatajudClient.Domain.Models.Processos;
 using DatajudClient.HttpClient;
@@ -15,9 +17,9 @@ namespace DatajudClient.Domain.Services
         {
             _httpClient = httpClient;
         }
-        public async Task<ResponseDatajudDTO> ObterDadosProcessoAsync(Processo processo)
+        public async Task<RetornoServico<ResponseDatajudDTO>> ObterDadosProcessoAsync(Processo processo)
         {
-            var resposta = new ResponseDatajudDTO();
+            var resposta = new RetornoServico<ResponseDatajudDTO>();
 
             try
             {
@@ -31,17 +33,40 @@ namespace DatajudClient.Domain.Services
                         }
                     }
                 };
-                var retornoDatajud = await _httpClient.ExecutarRequisicaoAsync(processo.Tribunal.EndpointConsultaNumero, HttpMethod.Post, request);
+
+                var uri = ObterUri(processo.Tribunal.EndpointConsultaNumero);
+                
+                var retornoDatajud = await _httpClient.ExecutarRequisicaoAsync(uri, HttpMethod.Get, request);
+
                 if (retornoDatajud.StatusCode != HttpStatusCode.OK)
-                    throw new Exception("Erro ao obter dados do processo no Datajud");
-                resposta = JsonConvert.DeserializeObject<ResponseDatajudDTO>(retornoDatajud.Content);
+                {
+                    resposta.Status = StatusRetornoEnum.ERRO;
+                    resposta.Erros = new List<string>() { String.Join("Erro ao obter dados do processo no Datajud: ", retornoDatajud.Content) };
+                }
+                else
+                {
+                    resposta.Status = StatusRetornoEnum.SUCESSO;
+                    resposta.Dados = JsonConvert.DeserializeObject<ResponseDatajudDTO>(retornoDatajud.Content);
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao obter dados do processo no Datajud", ex);
+                throw new Exception("Erro ao obter dados do processo no Datajud: " + ex.Message);
             }
 
-            return resposta ?? new ResponseDatajudDTO();
+            return resposta;
         }
+
+        #region Métodos Privados
+
+        private string ObterUri(string endpoint)
+        {
+            if (endpoint.EndsWith('/'))
+                endpoint = endpoint.Substring(0, endpoint.Length - 1);
+            endpoint = String.Concat(endpoint, "/_search");
+            return endpoint;
+        }
+
+        #endregion
     }
 }

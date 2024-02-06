@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using DatajudClient.Domain.DTO.Datajud;
 using DatajudClient.Domain.DTO.Processos;
 using DatajudClient.Domain.DTO.Shared;
@@ -6,22 +7,20 @@ using DatajudClient.Domain.Enum;
 using DatajudClient.Domain.Interfaces.Repositories;
 using DatajudClient.Domain.Interfaces.Services;
 using DatajudClient.Domain.Models.Processos;
-using DatajudClient.Domain.Models.Tribunais;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace DatajudClient.Domain.Services
 {
     public class ProcessoService : IProcessoService
     {
         private readonly IProcessoRepository _processoRepository;
-        private readonly ITribunalRepository _tribunalRepository;
         private readonly IDatajudService _datajudService;
         private readonly IMapper _mapper;
 
-        public ProcessoService(IProcessoRepository processoRepository,ITribunalRepository tribunalRepository, IDatajudService datajudService, IMapper mapper)
+        public ProcessoService(IProcessoRepository processoRepository, IDatajudService datajudService, IMapper mapper)
         {
             _processoRepository = processoRepository;
-            _tribunalRepository = tribunalRepository;
             _datajudService = datajudService;
             _mapper = mapper;
         }
@@ -53,7 +52,10 @@ namespace DatajudClient.Domain.Services
 
                         if (retornoDatajud != null)
                         {
-                            await ProcessarRetornoDatajud(retornoDatajud, processo);
+                            if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO)
+                                await ProcessarRetornoDatajud(retornoDatajud.Dados, processo);
+                            else
+                                listProcessoErro.Add(processo);
                         }
                         else
                         {
@@ -100,7 +102,7 @@ namespace DatajudClient.Domain.Services
             var retorno = new RetornoServico<List<ReadProcessoDTO>>();
             try
             {
-                var listProcessoErro = new ConcurrentBag<string>();
+                var listProcessoErro = new ConcurrentBag<(string processo, string msg)>(Enumerable.Empty<(string processo, string msg)>());
 
                 await Parallel.ForEachAsync(dto.numeros, async (numero, ct) =>
                 {
@@ -109,24 +111,28 @@ namespace DatajudClient.Domain.Services
                     if (processo != null)
                     {
                         var retornoDatajud = await _datajudService.ObterDadosProcessoAsync(processo);
+
                         if (retornoDatajud != null)
                         {
-                            await ProcessarRetornoDatajud(retornoDatajud, processo);
+                            if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO)
+                                await ProcessarRetornoDatajud(retornoDatajud.Dados, processo);
+                            else
+                                listProcessoErro.Add((processo.NumeroProcesso, String.Join(',', retornoDatajud.Erros)));
                         }
                         else
                         {
-                            listProcessoErro.Add(processo.NumeroProcesso);
+                            listProcessoErro.Add((processo.NumeroProcesso, "Não houve retorno do Datajud."));
                         }
                     }
                     else
                     {
-                        listProcessoErro.Add(numero);
+                        listProcessoErro.Add((numero, "Processo não encontrado."));
                     }
                 });
 
                 if (listProcessoErro.Count > 0)
                 {
-                    retorno.Erros = listProcessoErro.ToList();
+                    retorno.Erros = listProcessoErro.Select(x => { return string.Concat(x.processo, ": ", x.msg); }).ToList();
                     retorno.Status = StatusRetornoEnum.ERRO;
                     retorno.Mensagem = "Alguns processos não foram atualizados corretamente.";
                 }
@@ -157,36 +163,54 @@ namespace DatajudClient.Domain.Services
         private async Task MapearAndamentosDoProcesso(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
             var datajudAndamentos = new ConcurrentBag<Movimento>(respostaDatajud.hits.hits.Select(x => x._source.movimentos).First());
+            var andamentosIncluir = new ConcurrentBag<AndamentoProcesso>();
+            ConcurrentBag<ComplementoTabelado> dataJudComplementos;
 
             await Parallel.ForEachAsync(datajudAndamentos, async (andamento, ct) =>
             {
                 var andamentoExistente = processo.Andamentos != null && processo.Andamentos.Select(x => x.DataHora).Contains(andamento.dataHora);
+                var complementosIncluir = new ConcurrentBag<ComplementoAndamento>();
 
                 if (!andamentoExistente)
                 {
-                    var andamentoProcesso = new AndamentoProcesso
+                    var andamentoProcesso = new AndamentoProcesso()
                     {
                         Codigo = andamento.codigo,
                         Descricao = andamento.nome,
                         DataHora = andamento.dataHora,
                     };
-                    await Parallel.ForEachAsync(andamento.complementosTabelados, async (complemento, ct) =>
+
+                    if (andamento.complementosTabelados != null)
                     {
-                        if (andamentoProcesso.Complementos == null)
-                            andamentoProcesso.Complementos = new List<ComplementoAndamento>();
-                        andamentoProcesso.Complementos.Add(new ComplementoAndamento
+                        dataJudComplementos = new ConcurrentBag<ComplementoTabelado>(andamento.complementosTabelados);
+
+                        if (dataJudComplementos != null)
                         {
-                            Codigo = complemento.codigo,
-                            Valor = complemento.valor,
-                            Nome = complemento.nome,
-                            Descricao = complemento.descricao,
-                        });
-                    });
-                    if (processo.Andamentos == null)
-                        processo.Andamentos = new List<AndamentoProcesso>();
-                    processo.Andamentos.Add(andamentoProcesso);
+                            await Parallel.ForEachAsync(dataJudComplementos, async (complemento, ct) =>
+                            {
+                                var complementoAndamento = new ComplementoAndamento()
+                                {
+                                    Codigo = complemento.codigo,
+                                    Valor = complemento.valor,
+                                    Nome = complemento.nome,
+                                    Descricao = complemento.descricao,
+                                };
+
+                                complementosIncluir.Add(complementoAndamento);
+                            });
+
+                            andamentoProcesso.Complementos = complementosIncluir.ToList();
+                        }
+
+                        andamentosIncluir.Add(andamentoProcesso);
+                    }
                 }
             });
+
+            if (processo.Andamentos == null)
+                processo.Andamentos = new List<AndamentoProcesso>();
+
+            processo.Andamentos.AddRange(andamentosIncluir);
         }
 
         #endregion

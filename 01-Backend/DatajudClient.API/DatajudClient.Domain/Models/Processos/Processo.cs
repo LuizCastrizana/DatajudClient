@@ -1,4 +1,5 @@
-﻿using DatajudClient.Domain.Models.Tribunais;
+﻿using DatajudClient.Domain.Models.Endereco;
+using DatajudClient.Domain.Models.Tribunais;
 
 namespace DatajudClient.Domain.Models.Processos
 {
@@ -8,8 +9,9 @@ namespace DatajudClient.Domain.Models.Processos
         public string NomeCaso{ get; set; }
         public string Vara { get; set; }
         public string Comarca { get; set; }
-        public string Estado { get; set; }
         public string Observacao { get; set; }
+        public int EstadoId { get; set; }
+        public virtual Estado Estado { get; set; }
         public int TribunalId { get; set; }
         public virtual Tribunal Tribunal { get; set; }
         public virtual List<AndamentoProcesso>? Andamentos { get; set; }
@@ -20,10 +22,7 @@ namespace DatajudClient.Domain.Models.Processos
             NomeCaso = string.Empty;
             Vara = string.Empty;
             Comarca = string.Empty;
-            Estado = string.Empty;
             Observacao = string.Empty;
-            Tribunal = new Tribunal();
-            Andamentos = new List<AndamentoProcesso>();
         }
 
         /// <summary>

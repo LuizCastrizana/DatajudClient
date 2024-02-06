@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Web;
 
@@ -11,9 +12,9 @@ namespace DatajudClient.HttpClient
         private HttpRequestMessage? _requestMessage;
         private HttpResponseMessage? _responseMessage;
 
-        public HttpClient(IHttpClientFactory httpClientFactory)
+        public HttpClient(IHttpClientFactory httpClientFactory, IConfiguration config)
         {
-            _token = "APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==";
+            _token = config["DatajudToken"] ?? string.Empty;
             _httpClient = httpClientFactory.CreateClient();
             ConfigurarHeaders();
         }
@@ -147,7 +148,7 @@ namespace DatajudClient.HttpClient
         {
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("APIKey", _token);
         }
 
         #endregion

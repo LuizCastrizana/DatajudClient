@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatajudClient.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240201142442_inicial")]
+    [Migration("20240205203719_inicial")]
     partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,38 @@ namespace DatajudClient.Infrastructure.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.25")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("DatajudClient.Domain.Models.Endereco.Estado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("CodigoIbge")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataInclusao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UF")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Estado");
+                });
 
             modelBuilder.Entity("DatajudClient.Domain.Models.Processos.AndamentoProcesso", b =>
                 {
@@ -114,9 +146,8 @@ namespace DatajudClient.Infrastructure.Migrations
                     b.Property<DateTime>("DataInclusao")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("EstadoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("NomeCaso")
                         .IsRequired()
@@ -130,13 +161,90 @@ namespace DatajudClient.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("TribunalId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Vara")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EstadoId");
+
+                    b.HasIndex("TribunalId");
+
                     b.ToTable("Processo");
+                });
+
+            modelBuilder.Entity("DatajudClient.Domain.Models.Tribunais.CategoriaTribunal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataInclusao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoriaTribunal");
+                });
+
+            modelBuilder.Entity("DatajudClient.Domain.Models.Tribunais.Tribunal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataInclusao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("EndpointConsultaNumero")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("EstadoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sigla")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("EstadoId");
+
+                    b.ToTable("Tribunal");
                 });
 
             modelBuilder.Entity("DatajudClient.Domain.Models.Processos.AndamentoProcesso", b =>
@@ -159,6 +267,44 @@ namespace DatajudClient.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("AndamentoProcesso");
+                });
+
+            modelBuilder.Entity("DatajudClient.Domain.Models.Processos.Processo", b =>
+                {
+                    b.HasOne("DatajudClient.Domain.Models.Endereco.Estado", "Estado")
+                        .WithMany()
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatajudClient.Domain.Models.Tribunais.Tribunal", "Tribunal")
+                        .WithMany()
+                        .HasForeignKey("TribunalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estado");
+
+                    b.Navigation("Tribunal");
+                });
+
+            modelBuilder.Entity("DatajudClient.Domain.Models.Tribunais.Tribunal", b =>
+                {
+                    b.HasOne("DatajudClient.Domain.Models.Tribunais.CategoriaTribunal", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatajudClient.Domain.Models.Endereco.Estado", "Estado")
+                        .WithMany()
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("Estado");
                 });
 
             modelBuilder.Entity("DatajudClient.Domain.Models.Processos.AndamentoProcesso", b =>
