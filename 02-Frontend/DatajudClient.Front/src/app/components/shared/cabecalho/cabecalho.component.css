@@ -1,5 +1,5 @@
 .cabecalho {
-  background-color: #699;
+  background-color: #b84949;
   height: 72px;
 }
 .logo {
@@ -35,7 +35,7 @@
   display: none;
   position: absolute;
   top: 60px;
-  background-color: #333;
+  background-color: #d1d1d1;
   min-width: 160px;
   box-shadow: 3px 3px 8px 0px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
@@ -43,13 +43,15 @@
 }
 /* Links inside the dropdown */
 .dropdown-content a {
-  color: #fff;
+  color: #333;
+  background-color: #fff;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
   border-radius: 5px;
+  border-bottom: solid 1px #d1d1d1;
 }
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #111;}
+.dropdown-content a:hover {background-color: #f1f1f1;}
 /* Show the dropdown menu on hover */
 /* .dropdown:hover .dropdown-content {display: block;} */

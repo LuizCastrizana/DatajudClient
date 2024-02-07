@@ -1,1 +1,470 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+}
+.ff-verdana { font-family: 'Verdana', sans-serif; }
+.ff-roboto-mono { font-family: 'Roboto Mono', monospace; }
+/* Hn */
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 122px)
+}
+.main {
+  width: 90%;
+}
+h6, h5, h4, h3, h2, h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+h1 {
+  font-size: calc(1.375rem + 1.5vw);
+  color: #b84949;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+@media (min-width: 1200px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+h2 {
+  font-size: calc(1.325rem + 0.9vw);
+  font-weight: bold;
+}
+@media (min-width: 1200px) {
+  h2 {
+    font-size: 2rem;
+  }
+}
+h3 {
+  font-size: calc(1.3rem + 0.6vw);
+}
+@media (min-width: 1200px) {
+  h3 {
+    font-size: 1.75rem;
+  }
+}
+h4 {
+  font-size: calc(1.275rem + 0.3vw);
+}
+@media (min-width: 1200px) {
+  h4 {
+    font-size: 1.5rem;
+  }
+}
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1rem;
+}
+/* COMUM */
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.center {
+  text-align: center;
+}
+.container {
+  margin: auto;
+  padding: 1rem;
+  height: 100%;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+.flex-left {
+  display: flex;
+  justify-content: left;
+}
+.link :hover {
+  cursor: pointer;
+}
+/* COL */
+.col-1 {
+  flex: 0 0 8.333333%;
+  max-width: 8.333333%;
+}
+.col-2 {
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+}
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+.col-4 {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+}
+.col-5 {
+  flex: 0 0 41.666667%;
+  max-width: 41.666667%;
+}
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.col-7 {
+  flex: 0 0 58.333333%;
+  max-width: 58.333333%;
+}
+.col-8 {
+  flex: 0 0 66.666667%;
+  max-width: 66.666667%;
+}
+.col-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+.col-10 {
+  flex: 0 0 83.333333%;
+  max-width: 83.333333%;
+}
+.col-11 {
+  flex: 0 0 91.666667%;
+  max-width: 91.666667%;
+}
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+.col-flexible {
+  width: fit-content;
+}
+/* ROW */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.row .col {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+}
+.row .col:last-child {
+  padding: 0.5rem 0.5rem;
+}
+.form > .row {
+  padding: 0 0.5rem 0 0.5rem;
+}
+/* INPUT / FORM */
+input:disabled,
+input:read-only {
+  background-color: #eee;
+}
+.input-group {
+  display: flex;
+  height: 38px;
+  width: 100%;
+}
+.input-group .form-control{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.input-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 100%;
+}
+.form-control {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #333;
+  border-radius: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.4);
+  outline: none;
+}
+.form-control:focus{
+  outline: 2px solid rgb(144, 212, 212);
+}
+.form-group {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+.form-group label {
+  display: block;
+  margin: 0 0 0.2rem 0.325rem;
+  font-size: 0.875rem;
+}
+.form-group button {
+  margin-right: 0.5rem;
+}
+.form-group > .form-control {
+  display: block;
+  height: calc(1.5em + 0.75rem + 2px);
+}
+.form-validation {
+  display: none;
+  margin: 0.2rem 0 0 0.325rem;
+  font-size: 0.875rem;
+  color: #e63333;
+}
+.campo-obrigatorio {
+  border: 2px solid #e63333;
+}
+@media (max-width: 700px) {
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .form > .row {
+    flex-direction: column;
+  }
+}
+/* BTN */
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  background-color: #333;
+  border: 1px solid #333;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease-in-out;
+  height: 38px;
+  min-width: 38px;
+  width: fit-content;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.4);
+}
+.btn:hover {
+  color: #fff;
+  background-color: #111;
+  border-color: #111;
+}
+.btn:active {
+  background-color: #474747;
+  border-color: #111;
+}
+.btn-red {
+  color: #ffffff;
+  background-color: #e63333;
+  border-color: #971c1c;
+}
+.btn-red:hover {
+  color: #ffffff;
+  background-color: #ff2727;
+  border-color: #971c1c;
+}
+.btn-red:active {
+  background-color: #ff5757;
+  border-color: #971c1c;
+}
+.btn-sm {
+  padding: 0.25rem 0 0.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  height: 28px;
+  min-width: 28px;
+}
+.btn-lg {
+  padding: 0.4rem 0 1rem 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  height: 45px;
+  min-width: 45px;
+}
+.btn img {
+  width: 24px;
+  height: 24px;
+}
+.btn-sm img {
+  height: 20px;
+  width: 20px;
+}
+.btn-lg img {
+  height: 30px;
+  width: 30px;
+}
+/* TABLE */
+.table {
+  width: 100%;
+  font-size: 14px;
+  color: #212121;
+  background-color: #fff;
+  border: 1px solid #b84949;
+  min-width: 0;
+  border-spacing: 0;
+  border-radius: 0.5rem;
+}
+.table th, td {
+padding: 4px 7px 2px 7px;
+}
+.table th {
+background-color: #b84949;
+color: #fff;
+font-weight: bold;
+border: 1px solid #b84949;
+}
+.table td {
+border-right: 1px solid #b84949;
+}
+.table th:first-child {
+  border-radius: 0.5rem 0 0 0;
+}
+.table th:last-child {
+  border-right: 0;
+  border-radius: 0 0.5rem 0 0;
+}
+.table td:first-child {
+  border-radius: 0 0 0 0.5rem;
+}
+.table td:last-child {
+  border-right: 0;
+  border-radius: 0 0 0.5rem 0;
+}
+.table .campo-ordenacao:hover {
+  cursor: pointer;
+  background-color: #8EB3A1;
+}
+.table .titulo-tabela {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.img-ordenacao img {
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+}
+.nome-campo {
+  padding-bottom: 4px;
+}
+.img-status img {
+  width: 26px;
+  height: 26px;
+}
+/* PAINEL */
+.menu-painel {
+  height: 100%;
+  background-color: #b84949;
+}
+.titulo-pagina {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  width: 95%;
+  min-width: min-content;
+  height: 100%;
+}
+.conteudo-pagina {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  width: 95%;
+  border: 1px solid #b84949;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+.legenda-painel {
+  height: 100%;
+}
+.legenda-painel > .row {
+  padding: 0 0.5rem 0 0.5rem;
+}
+.legenda-painel-item {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0.375rem;
+  font-size: 0.75rem;
+}
+.legenda-painel-item img {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.25rem;
+}
+/* MODAL */
+.modal {
+  background: #fff;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.26);
+  border: 4px solid #b84949;
+  border-radius: 0.5rem;
+  min-width: 360px;
+  max-height: 100%;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+  font-size: 1.5rem;
+  overflow-x: auto;
+  text-align: center;
+}
+.overlay {
+  background: #000;
+  height: 100vh;
+  left: 0;
+  opacity: 0.5;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 10;
+}
+.conteudo-modal {
+  padding: 0.5rem 1.0rem;
+  font-size: 1rem;
+}
+.cabecalho-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #b84949;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+}
+.cabecalho-modal .texto {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.26);
+  margin-bottom: 0.2rem;
+  font-weight: bold;
+}
+.cabecalho-modal .img {
+  width: 36px;
+  height: 36px;
+  margin-left: 0.5rem;
+}
+.cabecalho-modal img {
+  width: 100%;
+  height: 100%;
+}
+.cabecalho-modal .btn-fechar {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+}
+.cabecalho-modal .btn-fechar:hover {
+  cursor: pointer;
+}
+.acoes-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  margin: 0.8rem 0;
+}
+@media screen and (max-width: 548px) {
+  .modal {
+    width: 90%;
+    min-width: 90%;
+  }
+}
