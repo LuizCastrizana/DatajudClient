@@ -1,0 +1,12 @@
+<div class="feedback-alerta" id="{{DadosFeedbackPopUp.Id}}">
+  <div class="alerta fade ff-verdana" [ngClass]="tratarTipoFeedback()">
+    <div class="alerta-item">
+      <strong>{{DadosFeedbackPopUp.Titulo}}</strong> {{DadosFeedbackPopUp.Mensagem}}
+    </div>
+    <div class="alerta-item">
+      <button type="button" class="close" title="Fechar" (click)="ocultar(DadosFeedbackPopUp.Id)">
+        <span>&times;</span>
+      </button>
+    </div>
+  </div>
+</div>
