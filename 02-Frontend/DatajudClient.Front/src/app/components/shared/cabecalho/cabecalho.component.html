@@ -1,20 +1,22 @@
-<header class="cabecalho ff-verdana flex-center">
-  <!-- <div class="botao-cabecalho link flex-center" onClick="history.go(-1)"> -->
+<header class="cabecalho ff-segoe-ui flex-center">
   <div class="botao-cabecalho flex-center">
-    <!-- <img src="../../../assets/img/voltar-icon.png" > -->
     <button onClick="history.go(-1)" title="Voltar" id="btnVoltar" class="btn btn-lg">
       <img src="../../../../assets/img/arrow-left-icon.png">
     </button>
   </div>
-  <div class="logo link flex-center" routerLink="home">
-    <img src="../../../assets/img/cabecalho.png" alt="Logo da aplicação Datajud Client" title="Home">
+  <div class="botao-cabecalho flex-center">
+    <button routerLink="home" title="Home" id="btnHome" class="btn btn-lg">
+      <img src="../../../../assets/img/home-icon.png">
+    </button>
+  </div>
+  <div class="logo link flex-center"> <!-- routerLink="home"> -->
+    <!-- <img src="../../../assets/img/home.png" alt="Logo da aplicação Datajud Client" title="Home"> -->
   </div>
   <div class="botao-cabecalho flex-center">
     <div class="dropdown">
       <button (click)="clickMenu()" title="Menu" id="btnMenu" class="btn btn-lg">
         <img src="../../../../assets/img/menu-icon.png">
       </button>
-      <!-- <a id="dropdown-btn" class="link flex-center" (click)="clickMenu()"><img src="../../../assets/img/menu-icon.png"></a> -->
       <div id="dropdown-content" class="dropdown-content">
         <a routerLink="home">Home</a>
         <a routerLink="processos">Processos</a>

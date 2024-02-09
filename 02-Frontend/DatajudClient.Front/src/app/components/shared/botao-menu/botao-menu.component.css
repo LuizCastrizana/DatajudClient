@@ -1,0 +1,66 @@
+.icone {
+  margin: 0 auto;
+  background-color: #b84949;
+  border: solid 1px #b84949;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.4);
+  text-align: center;
+  width: fit-content;
+}
+.icone:hover {
+  background-color: #a53e3e;
+  border-color: #a53e3e;
+}
+.icone:active {
+  background-color: #b66565;
+  border-color: #b66565;
+}
+.img-icone {
+  height: 64px;
+  width: 64px;
+  margin: 0 auto;
+  padding-left: 0.3rem;
+  padding-top: 0.3rem;
+  padding-bottom: 0;
+}
+
+.img-icone img {
+    width: 100%;
+    height: 100%;
+}
+
+.texto-botao {
+    font-size: 1em;
+    font-weight: medium;
+    text-shadow: #636363 0.05em 0.05em 0.12em;
+    color: #000000;
+    text-align: center;
+    padding-top: 0.2rem;
+}
+
+.botao {
+  padding: 1rem;
+  margin: 0 auto;
+  transition: 0.5s ease;
+  width: 120px;
+}
+
+.botao:hover {
+  cursor: pointer;
+}
+
+/* @media (max-width: 768px) {
+  .botao {
+    padding: 1rem;
+    margin: 0 auto;
+    transition: 0.5s ease;
+    width: 80px;
+  }
+  .img-botao {
+    height: 80px;
+    width: 80px;
+  }
+  .texto-botao {
+    font-size: 0.8em;
+  }
+} */

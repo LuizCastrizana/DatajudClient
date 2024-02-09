@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { CabecalhoComponent } from "./components/shared/cabecalho/cabecalho.component";
 import { RodapeComponent } from "./components/shared/rodape/rodape.component";
 import { FeedbackPopupComponent } from "./components/shared/feedback-popup/feedback-popup.component";
@@ -12,7 +12,7 @@ import { FeedbackService } from '../app/services/shared/feedback.service';
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    imports: [CommonModule, RouterOutlet, CabecalhoComponent, RodapeComponent, FeedbackPopupComponent]
+    imports: [CommonModule, RouterOutlet, RouterModule, CabecalhoComponent, RodapeComponent, FeedbackPopupComponent]
 })
 export class AppComponent {
   title = 'DatajudClient.Front';

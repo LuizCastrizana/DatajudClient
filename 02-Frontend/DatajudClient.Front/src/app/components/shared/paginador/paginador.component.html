@@ -1,0 +1,23 @@
+<div class="paginador-component">
+  <span>
+    <button type="button" class="btn btn-anterior" id="btnAnterior" title="Página anterior" (click)="goToPreviousPage()">
+      <img src="../../../../assets/img/arrow-left-icon.png">
+    </button>
+  </span>
+  <input
+    type="text"
+    class="campo-pagina"
+    id="txtPaginaAtual"
+    name="PaginaAtual"
+    [(ngModel)]="DadosPaginador.PaginaAtual"
+    (keypress)="apenasNumeros($event)"
+    (paste)="apenasNumeros($event)"
+    (keydown.enter)="goToPage()"
+    (keydown.return)="goToPage()"
+  >
+  <span>
+    <button type="button" class="btn btn-proximo" id="btnProximo" title="Próxima página" (click)="goToNextPage()">
+      <img src="../../../../assets/img/arrow-right-icon.png">
+    </button>
+  </span>
+</div>
