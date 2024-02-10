@@ -1,10 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject } from '@angular/core';
+import { RouterOutlet, RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-cabecalho',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet, RouterModule],
   templateUrl: './cabecalho.component.html',
   styleUrl: './cabecalho.component.css'
 })

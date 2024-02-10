@@ -1,0 +1,57 @@
+<div class="container main">
+  <div class="titulo-pagina ff-segoe-ui">
+    <h1>Processos</h1>
+  </div>
+  <div class="menu-painel conteudo-pagina">
+    <div class="row">
+      <div class="col col-flexible">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Buscar" name="Busca" id="txtBusca" (keydown.enter)="buscarProcessos()" (keydown.return)="buscarProcessos()">
+          <span>
+            <button title="Buscar" id="btnBuscar" class="btn" (click)="buscarProcessos()">
+              <img src="../../../../assets/img/lupa-icon.png">
+            </button>
+          </span>
+        </div>
+      </div>
+      <div class="col col-flexible">
+        <button title="Novo Processo" id="btnNovoProcesso" class="btn" routerLink="incluir-processo">
+          <img src="../../../../assets/img/plus-icon.png">
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="conteudo-pagina div-tabela">
+    <table class="table ff-segoe-ui">
+      <tr>
+        <th (click)="ordenarProcessos('Acoes')" id="thAcoes" class="campo-ordenacao">
+          <div class="titulo-tabela">
+            <span class="nome-campo">Ações</span>
+            <span class="img-ordenacao" id="imgAcoes"></span>
+          </div>
+        </th>
+        <th (click)="ordenarProcessos('NumeroProcesso')" id="thNumeroProcesso" class="campo-ordenacao">
+          <div class="titulo-tabela">
+            <span class="nome-campo">Num. do processo</span>
+            <span class="img-ordenacao" id="imgNumeroProcesso"></span>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        @for(processo of Processos; track processo.id)
+        {
+          <td>
+            <div class="acoes">
+              <button title="Editar" id="btnEditar" class="btn" routerLink="editar-processo/{{processo.id}}">
+                <img src="../../../../assets/img/pencil-icon.png">
+              </button>
+              <button title="Excluir" id="btnExcluir" class="btn" (click)="exibirModalExcluir(processo)">
+                <img src="../../../../assets/img/lixeira-icon.png">
+              </button>
+            </div>
+          </td>
+          <td>{{processo.numeroProcesso}}</td>
+        }
+    </table>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+.div-tabela{
+  display: flex;
+  padding-bottom: 0.5rem;
+  overflow-y: auto;
+}
+.div-tabela .table {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+#thAcoes {
+  min-width: 80px;
+}
+.acoes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.acoes-item {
+  padding: 0 2px 0 2px;
+}
