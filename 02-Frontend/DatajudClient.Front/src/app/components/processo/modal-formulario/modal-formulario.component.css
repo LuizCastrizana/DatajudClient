@@ -1,0 +1,19 @@
+.form-processo-modal {
+  display: none;
+}
+.modal {
+  width: 85%;
+  max-height: 85%;
+}
+.cabecalho-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn-fechar {
+  width: 28px;
+  height: 28px;
+}
+.btn-fechar:hover {
+  cursor: pointer;
+}

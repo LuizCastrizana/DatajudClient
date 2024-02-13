@@ -1,0 +1,16 @@
+<section class="excluir-modal ff-verdana" id="modalExcluir">
+  <div class="modal">
+    <div class="cabecalho-modal">
+      <span class="texto">Atenção</span><span class="img"><img src="../../../../assets/img/exclamacao-icon.png"></span>
+    </div>
+    <div class="conteudo-modal">
+      <span><strong>"{{DadosModalExcluir.NomeRegistro}}"</strong> será excluido. <br /> Confirma a exclusão?</span>
+    </div>
+    <div class="acoes-modal">
+      <button type="button" class="btn" id="btnCofirmar" title="Confirmar" (click)="excluirRegistro()">Excluir</button>
+      &nbsp;
+      <button type="button" class="btn btn-red" id="btnCancelar" title="Cancelar" (click)="cancelar()">Cancelar</button>
+    </div>
+  </div>
+  <div class="overlay"></div>
+</section>

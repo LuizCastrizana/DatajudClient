@@ -1,3 +1,3 @@
 export interface UpdateProcessoDto {
-  numeros: string[];
+  Numeros: string[];
 }

@@ -1,5 +1,5 @@
 export interface RespostaApi<T> {
-  valor: T;
-  mensagem: string;
-  erros: string[];
+  Dados: T;
+  Mensagem: string;
+  Erros: string[];
 }

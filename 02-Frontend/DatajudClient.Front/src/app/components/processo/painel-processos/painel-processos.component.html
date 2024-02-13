@@ -19,39 +19,80 @@
           <img src="../../../../assets/img/plus-icon.png">
         </button>
       </div>
+      <div class="col col-flexible">
+        <button title="Atualizar todos os processos" id="btnAtualizarTodosProcessos" class="btn" (click)="atualizarTodosProcessos()">
+          <img src="../../../../assets/img/atualizar-icon.png">
+        </button>
+      </div>
     </div>
   </div>
   <div class="conteudo-pagina div-tabela">
     <table class="table ff-segoe-ui">
-      <tr>
-        <th (click)="ordenarProcessos('Acoes')" id="thAcoes" class="campo-ordenacao">
-          <div class="titulo-tabela">
-            <span class="nome-campo">Ações</span>
-            <span class="img-ordenacao" id="imgAcoes"></span>
-          </div>
-        </th>
-        <th (click)="ordenarProcessos('NumeroProcesso')" id="thNumeroProcesso" class="campo-ordenacao">
-          <div class="titulo-tabela">
-            <span class="nome-campo">Num. do processo</span>
-            <span class="img-ordenacao" id="imgNumeroProcesso"></span>
-          </div>
-        </th>
-      </tr>
-      <tr>
-        @for(processo of Processos; track processo.id)
-        {
-          <td>
-            <div class="acoes">
-              <button title="Editar" id="btnEditar" class="btn" routerLink="editar-processo/{{processo.id}}">
-                <img src="../../../../assets/img/pencil-icon.png">
-              </button>
-              <button title="Excluir" id="btnExcluir" class="btn" (click)="exibirModalExcluir(processo)">
-                <img src="../../../../assets/img/lixeira-icon.png">
-              </button>
+      <thead>
+        <tr>
+          <th (click)="ordenarProcessos('Acoes')" id="thAcoes" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Ações</span>
+              <span class="img-ordenacao" id="imgAcoes"></span>
             </div>
-          </td>
-          <td>{{processo.numeroProcesso}}</td>
+          </th>
+          <th (click)="ordenarProcessos('NumeroProcesso')" id="thNumeroProcesso" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Num. do processo</span>
+              <span class="img-ordenacao" id="imgNumeroProcesso"></span>
+            </div>
+          </th>
+          <th (click)="ordenarProcessos('NomeCaso')" id="thNomeCaso" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Nome do caso</span>
+              <span class="img-ordenacao" id="imgNomeCaso"></span>
+            </div>
+          </th>
+          <th (click)="ordenarProcessos('Tribunal')" id="thTribunal" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Tribunal</span>
+              <span class="img-ordenacao" id="imgTribunal"></span>
+            </div>
+          </th>
+          <th (click)="ordenarProcessos('UltimoAndamento')" id="thUltimoAndamento" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Último andamento</span>
+              <span class="img-ordenacao" id="imgUltimoAndamento"></span>
+            </div>
+          </th>
+          <th (click)="ordenarProcessos('UltimaAtualizacao')" id="thUltimaAtualizacao" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Última atualização</span>
+              <span class="img-ordenacao" id="imgUltimaAtualizacao"></span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(processo of Processos; track processo.id) {
+          <tr>
+            <td>
+              <div class="acoes">
+                <button title="Editar" id="btnEditar" class="btn" routerLink="editar-processo/{{processo.id}}">
+                  <img src="../../../../assets/img/pencil-icon.png">
+                </button>
+                <button title="Atualizar" id="btnAtualizarProcesso" class="btn" (click)="atualizarProcesso(processo)">
+                  <img src="../../../../assets/img/atualizar-icon.png">
+                </button>
+                <button title="Excluir" id="btnExcluir" class="btn" (click)="exibirModalExcluir(processo)">
+                  <img src="../../../../assets/img/lixeira-icon.png">
+                </button>
+              </div>
+            </td>
+            <td>{{processo.numeroProcesso}}</td>
+            <td>{{processo.nomeCaso}}</td>
+            <td>{{processo.tribunal.sigla}} - {{processo.tribunal.nome}}</td>
+            <td>{{processo.ultimoAndamento}}</td>
+            <td>{{processo.ultimaAtualizacao}}</td>
+          </tr>
         }
+      </tbody>
     </table>
   </div>
 </div>
+<app-modal-excluir [DadosModalExcluir]="DadosModalExcluir" (ExcluirRegistro)="receiveMessageExcluir($event)"></app-modal-excluir>

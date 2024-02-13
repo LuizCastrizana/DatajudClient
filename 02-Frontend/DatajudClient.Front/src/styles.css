@@ -192,7 +192,12 @@ input:read-only {
   outline: none;
 }
 .form-control:focus{
-  outline: 2px solid rgb(144, 212, 212);
+  outline: 2px solid rgb(212, 144, 144);
+}
+.input-group:focus-within {
+  /* border-color: #333; */
+  outline: 2px solid rgb(212, 144, 144);
+  border-radius: 0.5rem;
 }
 .form-group {
   margin-bottom: 0.5rem;
@@ -335,7 +340,7 @@ border-right: 1px solid #b84949;
 }
 .table .campo-ordenacao:hover {
   cursor: pointer;
-  background-color: #8EB3A1;
+  background-color: #c55f5f;
 }
 .table .titulo-tabela {
   display: flex;

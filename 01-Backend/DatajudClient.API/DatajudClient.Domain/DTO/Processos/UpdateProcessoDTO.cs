@@ -2,6 +2,6 @@
 {
     public class UpdateProcessoDTO
     {
-        public List<string> numeros { get; set; }
+        public List<string> Numeros { get; set; }
     }
 }

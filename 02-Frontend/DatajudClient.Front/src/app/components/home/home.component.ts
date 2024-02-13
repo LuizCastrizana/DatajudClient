@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
 import { ItemMenu } from '../../interfaces/shared/itemMenu';
-import { BotaoMenuComponent } from "../shared/botao-menu/botao-menu.component";
 
 @Component({
     selector: 'app-home',
-    standalone: true,
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-    imports: [BotaoMenuComponent]
 })
 export class HomeComponent {
   listaItens: ItemMenu[] = [

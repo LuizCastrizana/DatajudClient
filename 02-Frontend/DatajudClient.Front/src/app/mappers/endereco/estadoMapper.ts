@@ -12,10 +12,10 @@ export class EstadoMapper {
 
     public static FromDto(Dto: ReadEstadoDto): Estado {
       let estado: Estado = {
-        id: Dto.id,
-        nome: Dto.nome,
-        uf: Dto.uf,
-        codigoIbge: Dto.codigoIbge,
+        id: Dto.Id,
+        nome: Dto.Nome,
+        uf: Dto.UF,
+        codigoIbge: Dto.CodigoIbge,
       }
 
       return estado;
@@ -23,10 +23,10 @@ export class EstadoMapper {
 
     public static ToDto(estado: Estado): ReadEstadoDto {
       let estadoDto: ReadEstadoDto = {
-        id: estado.id,
-        nome: estado.nome,
-        uf: estado.uf,
-        codigoIbge: estado.codigoIbge,
+        Id: estado.id,
+        Nome: estado.nome,
+        UF: estado.uf,
+        CodigoIbge: estado.codigoIbge,
       }
       return estadoDto;
     }

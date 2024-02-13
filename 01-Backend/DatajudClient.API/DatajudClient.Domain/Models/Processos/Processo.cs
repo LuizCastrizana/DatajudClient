@@ -10,6 +10,8 @@ namespace DatajudClient.Domain.Models.Processos
         public string Vara { get; set; }
         public string Comarca { get; set; }
         public string Observacao { get; set; }
+        public DateTime? UltimoAndamento { get; set; }
+        public DateTime? UltimaAtualizacao { get; set; }
         public int EstadoId { get; set; }
         public virtual Estado Estado { get; set; }
         public int TribunalId { get; set; }

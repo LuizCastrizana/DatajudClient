@@ -1,4 +1,4 @@
 export interface ReadCategoriaTribunalDto {
-  id: number;
-  descricao: string;
+  Id: number;
+  Descricao: string;
 }

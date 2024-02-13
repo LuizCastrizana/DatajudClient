@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration.Annotations;
 using DatajudClient.Domain.DTO.Datajud;
 using DatajudClient.Domain.DTO.Processos;
 using DatajudClient.Domain.DTO.Shared;
@@ -8,7 +7,6 @@ using DatajudClient.Domain.Interfaces.Repositories;
 using DatajudClient.Domain.Interfaces.Services;
 using DatajudClient.Domain.Models.Processos;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 
 namespace DatajudClient.Domain.Services
 {
@@ -104,7 +102,7 @@ namespace DatajudClient.Domain.Services
             {
                 var listProcessoErro = new ConcurrentBag<(string processo, string msg)>(Enumerable.Empty<(string processo, string msg)>());
 
-                await Parallel.ForEachAsync(dto.numeros, async (numero, ct) =>
+                await Parallel.ForEachAsync(dto.Numeros, async (numero, ct) =>
                 {
                     var processo = _processoRepository.Obter(x => x.NumeroProcesso == numero).FirstOrDefault();
 
@@ -138,7 +136,7 @@ namespace DatajudClient.Domain.Services
                 }
                 else
                 {
-                    retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(_processoRepository.Obter(x => dto.numeros.Contains(x.NumeroProcesso))).ToList();
+                    retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(_processoRepository.Obter(x => dto.Numeros.Contains(x.NumeroProcesso))).ToList();
                     retorno.Status = StatusRetornoEnum.SUCESSO;
                     retorno.Mensagem = "Processos atualizados com sucesso";
                 }
@@ -152,11 +150,42 @@ namespace DatajudClient.Domain.Services
             return retorno;
         }
 
+        public async Task<RetornoServico<List<ReadProcessoDTO>>> ObterProcessosAsync(string busca = "")
+        {
+            var retorno = new RetornoServico<List<ReadProcessoDTO>>();
+            try
+            {
+                busca = busca.ToUpper();
+
+                var processos = await _processoRepository.ObterAsync(x => 
+                x.NumeroProcesso.ToUpper().Contains(busca) 
+                ||
+                x.NomeCaso.ToUpper().Contains(busca) 
+                ||
+                x.Tribunal.Nome.ToUpper().Contains(busca) 
+                ||
+                x.Tribunal.Sigla.ToUpper().Contains(busca));
+
+                retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
+                retorno.Status = StatusRetornoEnum.SUCESSO;
+                retorno.Mensagem = "Processos obtidos com sucesso";
+            }
+            catch (Exception ex)
+            {
+                retorno.Erros = new List<string>() { ex.Message };
+                retorno.Status = StatusRetornoEnum.ERRO;
+                retorno.Mensagem = "Erro ao obter processos.";
+            }
+            return retorno;
+        }
+
         #region Métodos Privados
 
         private async Task ProcessarRetornoDatajud(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
             await MapearAndamentosDoProcesso(respostaDatajud, processo);
+            processo.UltimoAndamento = processo.Andamentos != null ? processo.Andamentos.OrderByDescending(x => x.DataHora).FirstOrDefault().DataHora : DateTime.MinValue;
+            processo.UltimaAtualizacao = DateTime.Now;
             await _processoRepository.SalvarAlteracoesAsync();
         }
 

@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using DatajudClient.Domain.DTO.Enderecos;
 using DatajudClient.Domain.DTO.Processos;
+using DatajudClient.Domain.DTO.Tribunais;
+using DatajudClient.Domain.Models.Endereco;
 using DatajudClient.Domain.Models.Processos;
+using DatajudClient.Domain.Models.Tribunais;
 
 namespace DatajudClient.CrossCutting
 {
@@ -13,7 +17,13 @@ namespace DatajudClient.CrossCutting
             CreateMap<DateTime?, DateTime>().ConvertUsing((src, dest) => src ?? dest);
 
             CreateMap<Processo, CreateProcessoDTO>().ReverseMap();
+            CreateMap<AndamentoProcesso, ReadAndamentoDTO>().ReverseMap();
+            CreateMap<ComplementoAndamento, ReadComplementoAndamentoDTO>().ReverseMap();
             CreateMap<Processo, ReadProcessoDTO>().ReverseMap();
+            CreateMap<Tribunal, ReadTribunalDto>().ReverseMap();
+            CreateMap<CategoriaTribunal, ReadCategoriaTribunalDto>().ReverseMap();
+            CreateMap<Estado, ReadEstadoDto>().ReverseMap();
+            
         }
     }
 }

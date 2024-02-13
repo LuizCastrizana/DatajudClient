@@ -8,6 +8,8 @@ export interface Processo {
   vara: string | null;
   comarca: string;
   observacao: string | null;
+  ultimoAndamento: Date;
+  ultimaAtualizacao: Date;
   estado: Estado;
   tribunal: Tribunal;
 }

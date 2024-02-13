@@ -15,13 +15,13 @@ export class TribunalMapper {
 
   public static FromDto(Dto: ReadTribunalDto): Tribunal {
     let tribunal: Tribunal = {
-      id: Dto.id,
-      nome: Dto.nome,
-      sigla: Dto.sigla,
-      numero: Dto.numero,
-      endpointConsultaNumero: Dto.endpointConsultaNumero,
-      categoria: CategoriaTribunalMapper.FromDto(Dto.categoria),
-      estado: EstadoMapper.FromDto(Dto.estado),
+      id: Dto.Id,
+      nome: Dto.Nome,
+      sigla: Dto.Sigla,
+      numero: Dto.Numero,
+      endpointConsultaNumero: Dto.EndpointConsultaNumero,
+      categoria: CategoriaTribunalMapper.FromDto(Dto.Categoria),
+      estado: EstadoMapper.FromDto(Dto.Estado),
     }
 
     return tribunal;
@@ -29,13 +29,13 @@ export class TribunalMapper {
 
   public static ToDto(tribunal: Tribunal): ReadTribunalDto {
     let tribunalDto: ReadTribunalDto = {
-      id: tribunal.id,
-      nome: tribunal.nome,
-      sigla: tribunal.sigla,
-      numero: tribunal.numero,
-      endpointConsultaNumero: tribunal.endpointConsultaNumero,
-      categoria: CategoriaTribunalMapper.ToDto(tribunal.categoria),
-      estado: EstadoMapper.ToDto(tribunal.estado),
+      Id: tribunal.id,
+      Nome: tribunal.nome,
+      Sigla: tribunal.sigla,
+      Numero: tribunal.numero,
+      EndpointConsultaNumero: tribunal.endpointConsultaNumero,
+      Categoria: CategoriaTribunalMapper.ToDto(tribunal.categoria),
+      Estado: EstadoMapper.ToDto(tribunal.estado),
     }
     return tribunalDto;
   }

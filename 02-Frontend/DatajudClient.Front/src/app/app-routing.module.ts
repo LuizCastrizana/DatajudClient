@@ -1,10 +1,10 @@
-import { Routes } from '@angular/router';
-import { NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { IncluirProcessoComponent } from './components/processo/incluir-processo/incluir-processo.component';
 import { PainelProcessosComponent } from './components/processo/painel-processos/painel-processos.component';
+import { IncluirProcessoComponent } from './components/processo/incluir-processo/incluir-processo.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -19,13 +19,13 @@ export const routes: Routes = [
     component: PainelProcessosComponent
   },
   {
-    path: 'incluir-processo',
+    path: 'processos/incluir',
     component: IncluirProcessoComponent
   }
 ];
 
 @NgModule({
-  imports: [],
-  exports: []
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

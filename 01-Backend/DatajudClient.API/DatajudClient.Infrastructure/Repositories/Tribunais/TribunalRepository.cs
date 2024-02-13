@@ -16,6 +16,7 @@ namespace DatajudClient.Infrastructure.Repositories
                 .Where(predicate)
                 .Where(x => x.Ativo)
                 .Include(x => x.Categoria)
+                .Include(x => x.Estado)
                 .ToList();
         }
 
@@ -25,6 +26,7 @@ namespace DatajudClient.Infrastructure.Repositories
                 .Where(predicate)
                 .Where(x => x.Ativo)
                 .Include(x => x.Categoria)
+                .Include(x => x.Estado)
                 .ToListAsync();
         }
     }

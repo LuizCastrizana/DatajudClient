@@ -15,14 +15,16 @@ export class ProcessoMapper {
 
   public static FromDto(Dto: ReadProcessoDto): Processo {
     let processo: Processo = {
-      id: Dto.id,
-      numeroProcesso: Dto.numeroProcesso,
-      nomeCaso: Dto.nomeCaso,
-      vara: Dto.vara,
-      comarca: Dto.comarca,
-      observacao: Dto.observacao,
-      estado: EstadoMapper.FromDto(Dto.estado),
-      tribunal: TribunalMapper.FromDto(Dto.tribunal)
+      id: Dto.Id,
+      numeroProcesso: Dto.NumeroProcesso,
+      nomeCaso: Dto.NomeCaso,
+      vara: Dto.Vara,
+      comarca: Dto.Comarca,
+      observacao: Dto.Observacao,
+      ultimoAndamento: Dto.UltimoAndamento,
+      ultimaAtualizacao: Dto.UltimaAtualizacao,
+      estado: EstadoMapper.FromDto(Dto.Estado),
+      tribunal: TribunalMapper.FromDto(Dto.Tribunal)
     }
 
     return processo;
@@ -30,14 +32,16 @@ export class ProcessoMapper {
 
   public static ToDto(processo: Processo): ReadProcessoDto {
     let processoDto: ReadProcessoDto = {
-      id: processo.id,
-      numeroProcesso: processo.numeroProcesso,
-      nomeCaso: processo.nomeCaso,
-      vara: processo.vara,
-      comarca: processo.comarca,
-      observacao: processo.observacao,
-      estado: EstadoMapper.ToDto(processo.estado),
-      tribunal: TribunalMapper.ToDto(processo.tribunal)
+      Id: processo.id,
+      NumeroProcesso: processo.numeroProcesso,
+      NomeCaso: processo.nomeCaso,
+      Vara: processo.vara,
+      Comarca: processo.comarca,
+      Observacao: processo.observacao,
+      UltimoAndamento: processo.ultimoAndamento,
+      UltimaAtualizacao: processo.ultimaAtualizacao,
+      Estado: EstadoMapper.ToDto(processo.estado),
+      Tribunal: TribunalMapper.ToDto(processo.tribunal)
     }
     return processoDto;
   }

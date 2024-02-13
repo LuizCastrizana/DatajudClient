@@ -1,13 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TipoFeedbackEnum } from '../../../enums/tipoFeedbackEnum';
 import { DadosFeedbackPopUp } from '../../../interfaces/shared/dadosFeedbackPopUp';
 import { FeedbackService } from '../../../services/shared/feedback.service';
 
 @Component({
   selector: 'app-feedback-popup',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './feedback-popup.component.html',
   styleUrl: './feedback-popup.component.css'
 })
@@ -24,13 +21,13 @@ export class FeedbackPopupComponent {
   tratarTipoFeedback() {
     switch (this.DadosFeedbackPopUp.TipoFeedback) {
       case TipoFeedbackEnum.Sucesso:
-        return "alerta-sucesso";
+        return "popup-sucesso";
       case TipoFeedbackEnum.Erro:
-        return "alerta-erro";
+        return "popup-erro";
       case TipoFeedbackEnum.Atencao:
-        return "alerta-atencao";
+        return "popup-atencao";
       default:
-        return "alerta-sucesso";
+        return "popup-sucesso";
     }
   }
 

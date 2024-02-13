@@ -12,8 +12,8 @@ export class CategoriaTribunalMapper {
 
     public static FromDto(Dto: ReadCategoriaTribunalDto): CategoriaTribunal {
       let categoriaTribunal: CategoriaTribunal = {
-        id: Dto.id,
-        descricao: Dto.descricao
+        id: Dto.Id,
+        descricao: Dto.Descricao
       }
 
       return categoriaTribunal;
@@ -21,8 +21,8 @@ export class CategoriaTribunalMapper {
 
     public static ToDto(categoriaTribunal: CategoriaTribunal): ReadCategoriaTribunalDto {
       let categoriaTribunalDto: ReadCategoriaTribunalDto = {
-        id: categoriaTribunal.id,
-        descricao: categoriaTribunal.descricao
+        Id: categoriaTribunal.id,
+        Descricao: categoriaTribunal.descricao
       }
       return categoriaTribunalDto;
     }

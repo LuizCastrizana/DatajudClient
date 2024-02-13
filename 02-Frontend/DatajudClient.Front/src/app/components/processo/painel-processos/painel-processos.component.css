@@ -17,6 +17,9 @@
   justify-content: center;
   align-items: center;
 }
-.acoes-item {
-  padding: 0 2px 0 2px;
+.acoes button {
+  margin-right: 0.2rem;
+}
+.acoes button:last-child {
+  margin-right: 0;
 }

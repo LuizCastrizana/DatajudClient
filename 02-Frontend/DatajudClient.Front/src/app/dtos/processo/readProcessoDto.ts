@@ -3,12 +3,15 @@ import { ReadCategoriaTribunalDto } from "../tribunal/readCategoriaTribunalDto";
 import { ReadTribunalDto } from "../tribunal/readTribunalDto";
 
 export interface ReadProcessoDto {
-  id: number;
-  numeroProcesso: string;
-  nomeCaso: string;
-  vara: string | null;
-  comarca: string;
-  observacao: string | null;
-  estado: ReadEstadoDto;
-  tribunal: ReadTribunalDto;
+  Id: number;
+  NumeroProcesso: string;
+  NomeCaso: string;
+  Vara: string | null;
+  Comarca: string;
+  Observacao: string | null;
+  UltimoAndamento: Date;
+  UltimaAtualizacao: Date;
+  Estado: ReadEstadoDto;
+  Tribunal: ReadTribunalDto;
+
 }

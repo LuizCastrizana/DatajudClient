@@ -1,12 +1,9 @@
 import { ValidacaoService } from '../../../services/shared/validacao.service';
 import { DadosPaginador } from '../../../interfaces/shared/paginacao/dadosPaginador';
 import { Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-paginador',
-  standalone: true,
-  imports: [FormsModule],
   templateUrl: './paginador.component.html',
   styleUrls: ['./paginador.component.css']
 })
