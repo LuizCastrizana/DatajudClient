@@ -21,9 +21,9 @@ namespace DatajudClient.API.Extensions
 
                     var result = new RetornoApi<string>
                     {
-                        Dados = null,
-                        Mensagem = null,
-                        Erros = errors
+                        dados = null,
+                        mensagem = null,
+                        erros = errors
                     };
 
                     return new BadRequestObjectResult(result);

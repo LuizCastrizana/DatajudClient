@@ -2,7 +2,7 @@
 
 namespace DatajudClient.Domain.DTO.Shared
 {
-    public class RetornoServico<T> where T : class
+    public class RetornoServico<T>
     {
         public T? Dados { get; set; }
         public StatusRetornoEnum Status { get; set; }

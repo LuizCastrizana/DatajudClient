@@ -57,6 +57,8 @@ namespace DatajudClient.CrossCutting.Ioc
             services.AddTransient<IHttpClient, HttpClient.HttpClient>();
             services.AddTransient<IProcessoService, ProcessoService>();
             services.AddTransient<IDatajudService, DatajudService>();
+            services.AddTransient<ITribunalService, TribunalService>();
+            services.AddTransient<IEnderecoService, EnderecoService>();
         }
     }
 }

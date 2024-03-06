@@ -15,7 +15,7 @@ namespace DatajudClient.Domain.DTO.Processos
         public string? Observacao { get; set; }
         public string UltimoAndamento { get; set; }
         public string UltimaAtualizacao { get; set; }
-        public ReadEstadoDto Estado { get; set; }
-        public ReadTribunalDto Tribunal { get; set; }
+        public ReadEstadoDTO Estado { get; set; }
+        public ReadTribunalDTO Tribunal { get; set; }
     }
 }

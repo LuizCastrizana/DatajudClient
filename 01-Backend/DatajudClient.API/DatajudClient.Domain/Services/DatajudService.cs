@@ -41,12 +41,13 @@ namespace DatajudClient.Domain.Services
                 if (retornoDatajud.StatusCode != HttpStatusCode.OK)
                 {
                     resposta.Status = StatusRetornoEnum.ERRO;
-                    resposta.Erros = new List<string>() { String.Join("Erro ao obter dados do processo no Datajud: ", retornoDatajud.Content) };
+                    resposta.Erros = new List<string>() { retornoDatajud.Content };
                 }
                 else
                 {
                     resposta.Status = StatusRetornoEnum.SUCESSO;
                     resposta.Dados = JsonConvert.DeserializeObject<ResponseDatajudDTO>(retornoDatajud.Content);
+                    resposta.Mensagem = "Dados do processo obtidos com sucesso.";
                 }
             }
             catch (Exception ex)
@@ -63,7 +64,7 @@ namespace DatajudClient.Domain.Services
         {
             if (endpoint.EndsWith('/'))
                 endpoint = endpoint.Substring(0, endpoint.Length - 1);
-            endpoint = String.Concat(endpoint, "/_search");
+            
             return endpoint;
         }
 

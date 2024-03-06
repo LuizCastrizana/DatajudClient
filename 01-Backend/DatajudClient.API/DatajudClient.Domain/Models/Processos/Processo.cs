@@ -13,9 +13,9 @@ namespace DatajudClient.Domain.Models.Processos
         public DateTime? UltimoAndamento { get; set; }
         public DateTime? UltimaAtualizacao { get; set; }
         public int EstadoId { get; set; }
-        public virtual Estado Estado { get; set; }
+        public virtual Estado? Estado { get; set; }
         public int TribunalId { get; set; }
-        public virtual Tribunal Tribunal { get; set; }
+        public virtual Tribunal? Tribunal { get; set; }
         public virtual List<AndamentoProcesso>? Andamentos { get; set; }
 
         public Processo()

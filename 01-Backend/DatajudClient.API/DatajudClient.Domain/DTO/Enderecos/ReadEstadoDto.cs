@@ -1,6 +1,6 @@
 ﻿namespace DatajudClient.Domain.DTO.Enderecos
 {
-    public class ReadEstadoDto
+    public class ReadEstadoDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }

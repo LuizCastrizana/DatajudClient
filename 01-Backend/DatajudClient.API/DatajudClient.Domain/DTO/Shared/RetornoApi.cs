@@ -2,17 +2,18 @@
 
 namespace DatajudClient.Domain.DTO.Shared
 {
-    public class RetornoApi<T> where T : class
+    public class RetornoApi<T>
     {
-        public T? Dados { get; set; }
-        public string Mensagem { get; set; }
-        public List<string>? Erros { get; set; }
+        public T? dados { get; set; }
+        public string mensagem { get; set; }
+        public List<string>? erros { get; set; }
+        public int status { get; set; }
 
         public RetornoApi()
         {
-            Dados = null;
-            Mensagem = string.Empty;
-            Erros = new List<string>();
+            dados = default(T);
+            mensagem = string.Empty;
+            erros = new List<string>();
         }
     }
 }

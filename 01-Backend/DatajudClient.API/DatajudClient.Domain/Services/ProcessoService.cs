@@ -30,17 +30,16 @@ namespace DatajudClient.Domain.Services
             try
             {
                 var processos = new ConcurrentBag<Processo>(_mapper.Map<IEnumerable<Processo>>(dtos));
-                var listProcessoErro = new ConcurrentBag<Processo>();
+                var listProcessoErro = new ConcurrentBag<(Processo processo, string mensagem)>();
+                var listProcessosErroDatajud = new ConcurrentBag<(Processo processo, string mensagem)>();
 
                 await Parallel.ForEachAsync(processos, async (processo, ct) =>
                 {
                     if (await _processoRepository.AdicionarAsync(processo) == 0)
-                        listProcessoErro.Add(processo);
+                        listProcessoErro.Add((processo, "Nenhum registro alterado no banco de dados."));
                 });
 
-                var processosSucesso = new ConcurrentBag<Processo>(processos.Except(listProcessoErro));
-
-                var listProcessosErroDatajud = new List<Processo>();
+                var processosSucesso = new ConcurrentBag<Processo>(processos.Except(listProcessoErro.Select(x => x.processo)));
 
                 await Parallel.ForEachAsync(processosSucesso, async (processo, ct) =>
                 {
@@ -53,16 +52,16 @@ namespace DatajudClient.Domain.Services
                             if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO)
                                 await ProcessarRetornoDatajud(retornoDatajud.Dados, processo);
                             else
-                                listProcessoErro.Add(processo);
+                                listProcessoErro.Add((processo, string.Join(", ", retornoDatajud.Erros != null ? retornoDatajud.Erros : string.Empty)));
                         }
                         else
                         {
-                            listProcessosErroDatajud.Add(processo);
+                            listProcessosErroDatajud.Add((processo, "Erro ao obter dados do Datajud."));
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        listProcessosErroDatajud.Add(processo);
+                        listProcessosErroDatajud.Add((processo, ex.Message));
                     }
                 });
 
@@ -70,26 +69,27 @@ namespace DatajudClient.Domain.Services
                 {
                     retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
                     retorno.Status = StatusRetornoEnum.SUCESSO;
-                    retorno.Mensagem = "Processos incluídos com sucesso";
-
-                    
+                    retorno.Mensagem = "Processo(s) incluído(s) com sucesso.";                    
                 }
                 else
                 {
                     retorno.Erros = new List<string>();
+
                     if (listProcessoErro.Count > 0)
-                        retorno.Erros.AddRange(listProcessoErro.Select(x => x.NumeroProcesso).ToList());
+                        retorno.Erros.AddRange(listProcessoErro.Select(x => x.processo.NumeroProcesso + ": " + x.mensagem).ToList());
+
                     if (listProcessosErroDatajud.Count > 0)
-                        retorno.Erros.AddRange(listProcessosErroDatajud.Select(x => x.NumeroProcesso).ToList());
+                        retorno.Erros.AddRange(listProcessosErroDatajud.Select(x => x.processo.NumeroProcesso + ": " + x.mensagem).ToList());
+
                     retorno.Status = StatusRetornoEnum.ERRO;
-                    retorno.Mensagem = "Alguns processos não foram incluídos corretamente.";
+                    retorno.Mensagem = "Erro ao incluir ou obter atualizações do(s) processo(s).";
                 }
             }
             catch (Exception ex)
             {
                 retorno.Erros = new List<string>() { ex.Message };
                 retorno.Status = StatusRetornoEnum.ERRO;
-                retorno.Mensagem = "Erro ao incluir processos.";
+                retorno.Mensagem = "Erro ao incluir o(s) processo(s).";
             }
 
             return retorno;
@@ -132,20 +132,48 @@ namespace DatajudClient.Domain.Services
                 {
                     retorno.Erros = listProcessoErro.Select(x => { return string.Concat(x.processo, ": ", x.msg); }).ToList();
                     retorno.Status = StatusRetornoEnum.ERRO;
-                    retorno.Mensagem = "Alguns processos não foram atualizados corretamente.";
+                    retorno.Mensagem = "Não foi possível atualizar todos os processos informados.";
                 }
                 else
                 {
                     retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(_processoRepository.Obter(x => dto.Numeros.Contains(x.NumeroProcesso))).ToList();
                     retorno.Status = StatusRetornoEnum.SUCESSO;
-                    retorno.Mensagem = "Processos atualizados com sucesso";
+                    retorno.Mensagem = "Processo(s) atualizado(s) com sucesso.";
                 }
             }
             catch (Exception ex)
             {
                 retorno.Erros = new List<string>() { ex.Message };
                 retorno.Status = StatusRetornoEnum.ERRO;
-                retorno.Mensagem = "Erro ao atualizar processos.";
+                retorno.Mensagem = "Erro ao atualizar o(s) processo(s).";
+            }
+            return retorno;
+        }
+
+        public async Task<RetornoServico<ReadProcessoDTO>> AtualizarDadosProcessoAsync(int id, UpdateDadosProcessoDTO dto)
+        {
+            var retorno = new RetornoServico<ReadProcessoDTO>();
+
+            try
+            {
+                var processo = _processoRepository.Obter(x => x.Id == id).FirstOrDefault();
+
+                if (processo != null)
+                {
+                    _mapper.Map(dto, processo);
+                    if (await _processoRepository.SalvarAlteracoesAsync() == 0)
+                        throw new Exception("Nenhum registro alterado no banco de dados.");
+
+                    retorno.Dados = _mapper.Map<ReadProcessoDTO>(processo);
+                    retorno.Status = StatusRetornoEnum.SUCESSO;
+                    retorno.Mensagem = "Dados do processo atualizados com sucesso.";
+                }
+            }
+            catch (Exception ex)
+            {
+                retorno.Erros = new List<string>() { ex.Message };
+                retorno.Status = StatusRetornoEnum.ERRO;
+                retorno.Mensagem = "Erro ao atualizar dados do processo.";
             }
             return retorno;
         }
@@ -168,7 +196,7 @@ namespace DatajudClient.Domain.Services
 
                 retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
                 retorno.Status = StatusRetornoEnum.SUCESSO;
-                retorno.Mensagem = "Processos obtidos com sucesso";
+                retorno.Mensagem = "Processos obtidos com sucesso.";
             }
             catch (Exception ex)
             {
@@ -176,6 +204,54 @@ namespace DatajudClient.Domain.Services
                 retorno.Status = StatusRetornoEnum.ERRO;
                 retorno.Mensagem = "Erro ao obter processos.";
             }
+            return retorno;
+        }
+
+        public async Task<RetornoServico<int>> ExcluirProcessos(IEnumerable<int> ids)
+        {
+            var retorno = new RetornoServico<int>();
+
+            try
+            {
+                var processosExcluidos = 0;
+                var processosErro = new ConcurrentBag<(Processo Processo, string Mensagem)>();
+
+                foreach (var id in ids)
+                {
+                    var processo = (await _processoRepository.ObterAsync(x => x.Id == id)).FirstOrDefault();
+
+                    if (processo == null)
+                    {
+                        processosErro.Add((new Processo() { Id = id }, "Processo não encontrado."));
+                    }
+                    else
+                    {
+                        if (await _processoRepository.ExcluirAsync(processo, true) == 0)
+                            processosErro.Add((processo, "Nenhum registro alterado no banco de dados."));
+                    }
+                };
+
+                if (processosErro.Count() > 0)
+                {
+                    retorno.Status = StatusRetornoEnum.ERRO;
+                    retorno.Erros = processosErro.Select(x => { return string.Concat(x.Processo.Id, ": ", x.Mensagem); }).ToList();
+                    retorno.Mensagem = "Não foi possível excluir todos os processos informados.";
+                }
+                else
+                {
+                    retorno.Status = StatusRetornoEnum.SUCESSO;
+                    retorno.Mensagem = "Processo(s) excluído(s) com sucesso.";
+                }
+
+                retorno.Dados = processosExcluidos;
+            }
+            catch (Exception ex)
+            {
+                retorno.Erros = new List<string>() { ex.Message };
+                retorno.Status = StatusRetornoEnum.ERRO;
+                retorno.Mensagem = "Erro ao excluir o(s) processo(s).";
+            }
+
             return retorno;
         }
 

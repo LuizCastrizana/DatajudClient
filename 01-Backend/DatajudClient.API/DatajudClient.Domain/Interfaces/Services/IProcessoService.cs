@@ -18,10 +18,22 @@ namespace DatajudClient.Domain.Interfaces.Services
         /// <returns>Lista de processos atualizados</returns>
         Task<RetornoServico<List<ReadProcessoDTO>>> AtualizarProcessosAsync(UpdateProcessoDTO dto);
         /// <summary>
+        /// Atualiza os dados do processo informado.
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns>Processo atualizado.</returns>
+        Task<RetornoServico<ReadProcessoDTO>> AtualizarDadosProcessoAsync(int id, UpdateDadosProcessoDTO dto);
+        /// <summary>
         /// Obtem os processos em que o nome, número do processo ou nome do tribunal contenham a string de busca informada.
         /// </summary>
         /// <param name="busca"></param>
         /// <returns>Lista de processos buscados</returns>
         Task<RetornoServico<List<ReadProcessoDTO>>> ObterProcessosAsync(string busca = "");
+        /// <summary>
+        /// Exclui os processos informados e todos os seus andamentos.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns>Numero de registros excluídos</returns>
+        Task<RetornoServico<int>> ExcluirProcessos(IEnumerable<int> ids);
     }
 }
