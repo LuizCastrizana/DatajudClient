@@ -11,11 +11,11 @@ export class FeedbackService {
 
   constructor() { }
 
-  gerarFeedbackAlerta(Dados: DadosFeedbackPopUp) {
+  gerarFeedbackPopUp(Dados: DadosFeedbackPopUp) {
     this.FeedbackAlertaEmitter.emit(Dados);
   }
 
-  ocultarFeedbackAlerta(Id: string) {
+  ocultarFeedbackPopUp(Id: string) {
     this.FecharAletaEmitter.emit(Id);
   }
 }

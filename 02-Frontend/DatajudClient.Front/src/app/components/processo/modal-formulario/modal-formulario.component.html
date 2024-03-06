@@ -1,1 +1,86 @@
-<p>modal-formulario works!</p>
+<section class="form-processo-modal ff-verdana" id="modalFormularioProcesso">
+  <div class="modal">
+    <div class="cabecalho-modal">
+      <span *ngIf="Edicao" class="texto">Editar Processo</span>
+      <span *ngIf="!Edicao" class="texto">Incluir Processo</span>
+      <span class="btn-fechar" (click)="fechar()"><img src="../../../../assets/img/fechar-icon.png"></span>
+    </div>
+    <div class="conteudo-modal">
+      <form (ngSubmit)="salvarDados()" class="form form-processo">
+        <div class="row">
+          <div class="col-3">
+            <div class="form-group">
+              <label for="txtNumeroProcesso">Numero do processo</label>
+              <input type="text" class="form-control" id="txtNumeroProcesso" placeholder="Número do processo" name="Número do processo"
+              (focusout)="campoObrigatorio('txtNumeroProcesso')" [(ngModel)]="Processo.numeroProcesso">
+              <label class="form-validation" id="erro_txtNumeroProcesso"></label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="txtNomeCaso">Nome do caso</label>
+              <input type="text" class="form-control" id="txtNomeCaso" placeholder="Nome do caso" name="Nome do caso"
+              (focusout)="campoObrigatorio('txtNomeCaso')" [(ngModel)]="Processo.nomeCaso">
+              <label class="form-validation" id="erro_txtNomeCaso"></label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="selTribunalId">Tribunal atual</label>
+              <select name="TribunalId" id="selTribunalId" class="form-control" (focusout)="campoObrigatorio('selTribunalId')" [(ngModel)]="TribunalId">
+                <option value="0">Selecione...</option>
+                <option *ngFor="let tribunal of Tribunais" [value]="tribunal.id">{{ tribunal.sigla }}</option>
+              </select>
+              <label class="form-validation" id="erro_selTribunalId"></label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="selEstadoOrigemId">Estado de origem</label>
+              <select name="EstadoOrigemId" id="selEstadoOrigemId" class="form-control" (focusout)="campoObrigatorio('selEstadoOrigemId')" [(ngModel)]="EstadoId">
+                <option value="0">Selecione...</option>
+                <option *ngFor="let estado of Estados" [value]="estado.id">{{ estado.nome }}</option>
+              </select>
+              <label class="form-validation" id="erro_selEstadoOrigemId"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="form-group">
+              <label for="txtVara">Vara</label>
+              <input type="text" class="form-control" id="txtVara" placeholder="Vara" name="Vara"
+              (focusout)="campoObrigatorio('txtVara')" [(ngModel)]="Processo.vara">
+              <label class="form-validation" id="erro_txtVara"></label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="txtVara">Comarca</label>
+              <input type="text" class="form-control" id="txtComarca" placeholder="Comarca" name="Comarca"
+              (focusout)="campoObrigatorio('txtComarca')" [(ngModel)]="Processo.comarca">
+              <label class="form-validation" id="erro_txtComarca"></label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="txtVara">Observação</label>
+              <input type="text" class="form-control" id="txtObservacao" placeholder="Observação" name="Observação"
+              [(ngModel)]="Processo.observacao">
+              <label class="form-validation" id="erro_txtObservacao"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <button type="button" id="btnSalvar" title="Salvar" class="btn" (click)="salvarDados()">Salvar</button>
+              <button type="button" id="btnCancelar" title="Cancelar" class="btn btn-red" (click)="fechar()">Cancelar</button>
+            </div>
+          </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="overlay"></div>
+</section>

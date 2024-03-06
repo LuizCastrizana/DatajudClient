@@ -260,6 +260,7 @@ input:read-only {
 .btn:active {
   background-color: #474747;
   border-color: #111;
+  outline: 2px solid rgb(212, 144, 144);
 }
 .btn-red {
   color: #ffffff;

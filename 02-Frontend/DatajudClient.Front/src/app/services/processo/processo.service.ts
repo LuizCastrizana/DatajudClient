@@ -6,6 +6,8 @@ import { RespostaApi } from '../../dtos/respostaApi';
 import { ReadProcessoDto } from '../../dtos/processo/readProcessoDto';
 import { UpdateProcessoDto } from './../../dtos/processo/updateProcessoDto';
 import { CreateProcessoDto } from './../../dtos/processo/createProcessoDto';
+import { UpdateDadosProcessoDto } from '../../dtos/processo/updateDadosProcessoDto';
+import { DeleteProcessoDto } from '../../dtos/processo/deleteProcessoDto';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +35,7 @@ export class ProcessoService {
 
   incluir (CreateProcessoDtos: CreateProcessoDto[]): Observable<RespostaApi<ReadProcessoDto[]>> {
     const url = `${this.API}/CadastrarProcessos`
-    return this.http.post<RespostaApi<ReadProcessoDto[]>>(this.API, CreateProcessoDtos)
+    return this.http.post<RespostaApi<ReadProcessoDto[]>>(url, CreateProcessoDtos)
   }
 
   atualizar (UpdateProcessoDto: UpdateProcessoDto): Observable<RespostaApi<ReadProcessoDto>> {
@@ -41,8 +43,13 @@ export class ProcessoService {
     return this.http.post<RespostaApi<ReadProcessoDto>>(url, UpdateProcessoDto)
   }
 
-  excluir (id: string): Observable<RespostaApi<ReadProcessoDto>> {
-    const url = `${this.API}/ExcluirProcesso/${id}`
-    return this.http.delete<RespostaApi<ReadProcessoDto>>(url)
+  atualizarDados (id: string, UpdateDadosProcessoDto: UpdateDadosProcessoDto): Observable<RespostaApi<ReadProcessoDto>> {
+    const url = `${this.API}/AtualizarDadosProcesso/${id}`
+    return this.http.put<RespostaApi<ReadProcessoDto>>(url, UpdateDadosProcessoDto)
+  }
+
+  excluir (DeleteProcessoDto: DeleteProcessoDto): Observable<RespostaApi<ReadProcessoDto>> {
+    const url = `${this.API}/ExcluirProcessos`
+    return this.http.post<RespostaApi<ReadProcessoDto>>(url, DeleteProcessoDto)
   }
 }

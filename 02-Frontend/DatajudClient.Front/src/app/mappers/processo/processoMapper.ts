@@ -1,9 +1,11 @@
-import { Tribunal } from './../../interfaces/tribunal/tribunal';
 import { Injectable } from "@angular/core";
 import { ReadProcessoDto } from "../../dtos/processo/readProcessoDto";
 import { Processo } from "../../interfaces/processo/processo";
 import { EstadoMapper } from "../endereco/estadoMapper";
 import { TribunalMapper } from '../tribunal/tribunalMapper';
+import { CreateProcessoDto } from '../../dtos/processo/createProcessoDto';
+import { UpdateDadosProcessoDto } from '../../dtos/processo/updateDadosProcessoDto';
+import { DeleteProcessoDto } from '../../dtos/processo/deleteProcessoDto';
 
 @Injectable({
   providedIn: "root",
@@ -42,6 +44,52 @@ export class ProcessoMapper {
       UltimaAtualizacao: processo.ultimaAtualizacao,
       Estado: EstadoMapper.ToDto(processo.estado),
       Tribunal: TribunalMapper.ToDto(processo.tribunal)
+    }
+    return processoDto;
+  }
+
+  public static ToUpdateDto(processo: Processo): UpdateDadosProcessoDto {
+    let processoDto: UpdateDadosProcessoDto = {
+      NumeroProcesso: processo.numeroProcesso,
+      NomeCaso: processo.nomeCaso,
+      Vara: processo.vara,
+      Comarca: processo.comarca,
+      Observacao: processo.observacao,
+      EstadoId: processo.estado.id,
+      TribunalId: processo.tribunal.id
+    }
+    return processoDto;
+  }
+
+  public static ToUpdateDadosDto(processo: Processo): UpdateDadosProcessoDto {
+    let processoDto: UpdateDadosProcessoDto = {
+      NumeroProcesso: processo.numeroProcesso,
+      NomeCaso: processo.nomeCaso,
+      Vara: processo.vara,
+      Comarca: processo.comarca,
+      Observacao: processo.observacao,
+      EstadoId: processo.estado.id,
+      TribunalId: processo.tribunal.id
+    }
+    return processoDto;
+  }
+
+  public static ToCreateDto(processo: Processo): CreateProcessoDto {
+    let processoDto: CreateProcessoDto = {
+      NumeroProcesso: processo.numeroProcesso,
+      NomeCaso: processo.nomeCaso,
+      Vara: processo.vara,
+      Comarca: processo.comarca,
+      Observacao: processo.observacao,
+      EstadoId: processo.estado.id,
+      TribunalId: processo.tribunal.id
+    }
+    return processoDto;
+  }
+
+  public static ToDeleteDto(processo: Processo): DeleteProcessoDto {
+    let processoDto: DeleteProcessoDto = {
+      Ids: [processo.id.toString()]
     }
     return processoDto;
   }

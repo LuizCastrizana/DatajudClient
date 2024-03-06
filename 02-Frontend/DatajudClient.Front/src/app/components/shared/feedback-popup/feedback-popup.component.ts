@@ -32,7 +32,7 @@ export class FeedbackPopupComponent {
   }
 
   ocultar(Id: string) {
-    this.feedbackService.ocultarFeedbackAlerta(Id);
+    this.feedbackService.ocultarFeedbackPopUp(Id);
   }
 
 }

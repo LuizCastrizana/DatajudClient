@@ -64,6 +64,6 @@ export class RespostaApiService {
           } as DadosFeedbackPopUp;
           break;
       }
-      this.FeedbackService.gerarFeedbackAlerta(DadosFeedbackPopUp);
+      this.FeedbackService.gerarFeedbackPopUp(DadosFeedbackPopUp);
   }
 }

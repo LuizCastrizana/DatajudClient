@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="col col-flexible">
-        <button title="Novo Processo" id="btnNovoProcesso" class="btn" routerLink="incluir-processo">
+        <button title="Novo Processo" id="btnNovoProcesso" class="btn" (click)="exibirModalFormulario(false)">
           <img src="../../../../assets/img/plus-icon.png">
         </button>
       </div>
@@ -73,7 +73,7 @@
           <tr>
             <td>
               <div class="acoes">
-                <button title="Editar" id="btnEditar" class="btn" routerLink="editar-processo/{{processo.id}}">
+                <button title="Editar" id="btnEditar" class="btn" (click)="exibirModalFormulario(true, processo)">
                   <img src="../../../../assets/img/pencil-icon.png">
                 </button>
                 <button title="Atualizar" id="btnAtualizarProcesso" class="btn" (click)="atualizarProcesso(processo)">
@@ -96,3 +96,4 @@
   </div>
 </div>
 <app-modal-excluir [DadosModalExcluir]="DadosModalExcluir" (ExcluirRegistro)="receiveMessageExcluir($event)"></app-modal-excluir>
+<app-modal-formulario-processo [(Processo)]="ProcessoAcao" [Edicao]="AcaoEditar" (EventoEdicao)="receiveMessageFormulario($event)"></app-modal-formulario-processo>

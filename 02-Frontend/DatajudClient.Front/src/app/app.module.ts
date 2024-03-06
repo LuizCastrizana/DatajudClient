@@ -14,7 +14,7 @@ import { BotaoMenuComponent } from "./components/shared/botao-menu/botao-menu.co
 import { PaginadorComponent } from './components/shared/paginador/paginador.component';
 import { HomeComponent } from './components/home/home.component';
 import { PainelProcessosComponent } from './components/processo/painel-processos/painel-processos.component';
-import { IncluirProcessoComponent } from './components/processo/incluir-processo/incluir-processo.component';
+import { ModalFormularioProcessoComponent } from './components/processo/modal-formulario/modal-formulario.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { IncluirProcessoComponent } from './components/processo/incluir-processo
     PaginadorComponent,
     HomeComponent,
     PainelProcessosComponent,
-    IncluirProcessoComponent
+    ModalFormularioProcessoComponent,
   ],
   imports: [
     CommonModule,

@@ -11,6 +11,7 @@ import { DadosFeedbackPopUp } from '../../../interfaces/shared/dadosFeedbackPopU
 import { ProcessoMapper } from '../../../mappers/processo/processoMapper';
 import { ItemPagina } from '../../../interfaces/shared/paginacao/itemPagina';
 import { DadosModalExcluir } from '../../../interfaces/shared/dadosModalExcluir';
+import { CreateProcessoDto } from '../../../dtos/processo/createProcessoDto';
 
 @Component({
   selector: 'app-painel-processos',
@@ -43,7 +44,7 @@ export class PainelProcessosComponent {
   ngOnInit(): void {
     this.processoService.listar().subscribe({
       next: (respostaApi) => {
-        respostaApi.Dados.forEach(processoDto => {
+        respostaApi.dados.forEach(processoDto => {
           this.Processos.push(ProcessoMapper.FromDto(processoDto));
         });
         this.ordenarProcessos();
@@ -54,7 +55,7 @@ export class PainelProcessosComponent {
           Titulo: "Erro!",
           Mensagem: "Não foi possível obter os processos."
         } as DadosFeedbackPopUp;
-        this.feedbackService.gerarFeedbackAlerta(dadosFeedback);
+        this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
       }
     });
   }
@@ -64,7 +65,7 @@ export class PainelProcessosComponent {
     this.Processos = [];
     this.processoService.buscar(busca).subscribe({
       next: (respostaApi) => {
-        respostaApi.Dados.forEach(processoDto => {
+        respostaApi.dados.forEach(processoDto => {
           this.Processos.push(ProcessoMapper.FromDto(processoDto));
         });
         this.ordenarProcessos();
@@ -225,7 +226,7 @@ export class PainelProcessosComponent {
   exibirModalExcluir(processo: Processo): void {
     this.ProcessoAcao = processo;
     this.DadosModalExcluir = {
-      NomeRegistro: "processo nº: " + processo.numeroProcesso,
+      NomeRegistro: "Processo nº: " + processo.numeroProcesso,
       IdRegistro: processo.id
     }
     document.getElementById('modalExcluir')!.style.display = 'block';
@@ -233,7 +234,7 @@ export class PainelProcessosComponent {
 
   receiveMessageExcluir($event: DadosModalExcluir) {
     this.DadosModalExcluir = $event;
-    this.processoService.excluir(this.DadosModalExcluir.IdRegistro.toString()).subscribe({
+    this.processoService.excluir(ProcessoMapper.ToDeleteDto(this.ProcessoAcao)).subscribe({
       next: (retornoApi) => {
         this.respostaApiService.tratarRespostaApi(retornoApi);
         this.buscarProcessos();
@@ -243,9 +244,48 @@ export class PainelProcessosComponent {
       error: (err) => {
         this.respostaApiService.tratarRespostaApi(err);
         document.getElementById('modalExcluir')!.style.display = 'none';
-        window.scroll(0,0);
+        window.scroll(0,0);FeedbackService
       }
     });
+  }
+
+  exibirModalFormulario(Edicao: boolean, ProcessoAcao?: Processo) {
+    this.ProcessoAcao = ProcessoAcao != undefined ? ProcessoAcao : ({} as Processo);
+    this.AcaoEditar = Edicao;
+    document.getElementById('modalFormularioProcesso')!.style.display = 'block';
+  }
+
+  receiveMessageFormulario($eventEdicao: boolean) {
+    if ($eventEdicao) {
+      this.processoService
+          .atualizarDados(
+            this.ProcessoAcao!.id.toString(),
+            ProcessoMapper.ToUpdateDto(this.ProcessoAcao!)
+          )
+          .subscribe({
+            next: (result) => {
+              this.respostaApiService.tratarRespostaApi(result);
+              this.buscarProcessos();
+            },
+            error: (err) => {
+              this.respostaApiService.tratarRespostaApi(err);
+            }
+          });
+    } else {
+      this.processoService
+          .incluir(new Array<CreateProcessoDto>().concat(ProcessoMapper.ToCreateDto(this.ProcessoAcao!)))
+          .subscribe({
+            next: (result) => {
+              this.respostaApiService.tratarRespostaApi(result);
+              this.buscarProcessos();
+            },
+            error: (err) => {
+              this.respostaApiService.tratarRespostaApi(err);
+            }
+          });
+    }
+    document.getElementById('modalFormularioProcesso')!.style.display = 'none';
+    window.scroll(0,0);
   }
 
   atualizarProcesso(processo: Processo): void {
@@ -260,7 +300,8 @@ export class PainelProcessosComponent {
           Titulo: "Sucesso!",
           Mensagem: "Processo atualizado com sucesso."
         } as DadosFeedbackPopUp;
-        this.feedbackService.gerarFeedbackAlerta(dadosFeedback);
+        this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+        this.buscarProcessos();
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
       }
@@ -278,7 +319,8 @@ export class PainelProcessosComponent {
           Titulo: "Sucesso!",
           Mensagem: "Processos atualizados com sucesso."
         } as DadosFeedbackPopUp;
-        this.feedbackService.gerarFeedbackAlerta(dadosFeedback);
+        this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+        this.buscarProcessos();
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
       }
