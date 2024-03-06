@@ -20,6 +20,7 @@ namespace DatajudClient.CrossCutting
             CreateMap<AndamentoProcesso, ReadAndamentoDTO>().ReverseMap();
             CreateMap<ComplementoAndamento, ReadComplementoAndamentoDTO>().ReverseMap();
             CreateMap<Processo, ReadProcessoDTO>().ReverseMap();
+            CreateMap<Processo, UpdateDadosProcessoDTO>().ReverseMap();
             CreateMap<Tribunal, ReadTribunalDTO>().ReverseMap();
             CreateMap<CategoriaTribunal, ReadCategoriaTribunalDTO>().ReverseMap();
             CreateMap<Estado, ReadEstadoDTO>().ReverseMap();
