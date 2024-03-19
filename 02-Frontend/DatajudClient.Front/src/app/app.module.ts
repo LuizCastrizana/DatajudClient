@@ -15,6 +15,7 @@ import { PaginadorComponent } from './components/shared/paginador/paginador.comp
 import { HomeComponent } from './components/home/home.component';
 import { PainelProcessosComponent } from './components/processo/painel-processos/painel-processos.component';
 import { ModalFormularioProcessoComponent } from './components/processo/modal-formulario/modal-formulario.component';
+import { DetalhesProcessoComponent } from './components/processo/detalhes-processo/detalhes-processo.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ModalFormularioProcessoComponent } from './components/processo/modal-fo
     HomeComponent,
     PainelProcessosComponent,
     ModalFormularioProcessoComponent,
+    DetalhesProcessoComponent,
   ],
   imports: [
     CommonModule,

@@ -79,6 +79,9 @@
                 <button title="Atualizar" id="btnAtualizarProcesso" class="btn" (click)="atualizarProcesso(processo)">
                   <img src="../../../../assets/img/atualizar-icon.png">
                 </button>
+                <button title="Detalhes" id="btnDetalhesProcesso" class="btn" routerLink="detalhes-processo/{{processo.id}}">
+                  <img src="../../../../assets/img/detalhes-icon.png">
+                </button>
                 <button title="Excluir" id="btnExcluir" class="btn" (click)="exibirModalExcluir(processo)">
                   <img src="../../../../assets/img/lixeira-icon.png">
                 </button>
@@ -94,6 +97,7 @@
       </tbody>
     </table>
   </div>
+  <app-paginador [DadosPaginador]="DadosPaginador" (messageEvent)="receiveMessageDadosPaginador($event)"></app-paginador>
 </div>
 <app-modal-excluir [DadosModalExcluir]="DadosModalExcluir" (ExcluirRegistro)="receiveMessageExcluir($event)"></app-modal-excluir>
 <app-modal-formulario-processo [(Processo)]="ProcessoAcao" [Edicao]="AcaoEditar" (EventoEdicao)="receiveMessageFormulario($event)"></app-modal-formulario-processo>

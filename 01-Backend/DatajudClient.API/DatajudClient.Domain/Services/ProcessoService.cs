@@ -102,7 +102,7 @@ namespace DatajudClient.Domain.Services
             {
                 var listProcessoErro = new ConcurrentBag<(string processo, string msg)>(Enumerable.Empty<(string processo, string msg)>());
 
-                await Parallel.ForEachAsync(dto.Numeros, async (numero, ct) =>
+                foreach (var numero in dto.Numeros)
                 {
                     var processo = _processoRepository.Obter(x => x.NumeroProcesso == numero).FirstOrDefault();
 
@@ -126,7 +126,7 @@ namespace DatajudClient.Domain.Services
                     {
                         listProcessoErro.Add((numero, "Processo não encontrado."));
                     }
-                });
+                }
 
                 if (listProcessoErro.Count > 0)
                 {
@@ -195,6 +195,26 @@ namespace DatajudClient.Domain.Services
                 x.Tribunal.Sigla.ToUpper().Contains(busca));
 
                 retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
+                retorno.Status = StatusRetornoEnum.SUCESSO;
+                retorno.Mensagem = "Processos obtidos com sucesso.";
+            }
+            catch (Exception ex)
+            {
+                retorno.Erros = new List<string>() { ex.Message };
+                retorno.Status = StatusRetornoEnum.ERRO;
+                retorno.Mensagem = "Erro ao obter processos.";
+            }
+            return retorno;
+        }
+
+        public async Task<RetornoServico<ReadProcessoDTO>> ObterProcessosPorIdAsync(int id)
+        {
+            var retorno = new RetornoServico<ReadProcessoDTO>();
+            try
+            {
+                var processos = (await _processoRepository.ObterAsync(x => x.Id == id)).FirstOrDefault();
+
+                retorno.Dados = _mapper.Map<ReadProcessoDTO>(processos);
                 retorno.Status = StatusRetornoEnum.SUCESSO;
                 retorno.Mensagem = "Processos obtidos com sucesso.";
             }

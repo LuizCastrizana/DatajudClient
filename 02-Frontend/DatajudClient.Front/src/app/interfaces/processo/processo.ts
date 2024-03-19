@@ -1,5 +1,6 @@
 import { Estado } from "../endereco/estado";
 import { Tribunal } from "../tribunal/tribunal";
+import { AndamentoProcesso } from "./andamentoProcesso";
 
 export interface Processo {
   id: number;
@@ -12,4 +13,5 @@ export interface Processo {
   ultimaAtualizacao: Date;
   estado: Estado;
   tribunal: Tribunal;
+  Andamentos: AndamentoProcesso[] | null;
 }

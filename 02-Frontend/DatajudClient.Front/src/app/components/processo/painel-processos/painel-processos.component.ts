@@ -201,7 +201,7 @@ export class PainelProcessosComponent {
       }
   }
 
-  receberDadosPaginador($event: DadosPaginador): void {
+  receiveMessageDadosPaginador($event: DadosPaginador) {
     this.DadosPaginador = $event
     this.paginarProcessos();
   }
@@ -223,7 +223,7 @@ export class PainelProcessosComponent {
     this.DadosPaginados.Itens = itensPagina.filter(item => item.Pagina == this.DadosPaginados.Pagina).map(item => item.Item);
   }
 
-  exibirModalExcluir(processo: Processo): void {
+  exibirModalExcluir(processo: Processo) {
     this.ProcessoAcao = processo;
     this.DadosModalExcluir = {
       NomeRegistro: "Processo nº: " + processo.numeroProcesso,
@@ -288,7 +288,7 @@ export class PainelProcessosComponent {
     window.scroll(0,0);
   }
 
-  atualizarProcesso(processo: Processo): void {
+  atualizarProcesso(processo: Processo) {
     let numeros: String[] = [];
     numeros.push(processo.numeroProcesso);
     let UpdateProcessoDto = { Numeros: numeros } as UpdateProcessoDto;

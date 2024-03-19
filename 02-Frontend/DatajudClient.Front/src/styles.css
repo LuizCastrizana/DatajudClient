@@ -26,6 +26,12 @@ h1 {
   font-weight: bold;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 }
+h2 {
+  font-size: calc(1.325rem + 0.9vw);
+  color: #b84949;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
 @media (min-width: 1200px) {
   h1 {
     font-size: 2.5rem;
@@ -148,6 +154,9 @@ p {
 .row {
   display: flex;
   flex-wrap: wrap;
+}
+.col {
+  box-sizing: border-box;
 }
 .row .col {
   padding: 0.5rem 0 0.5rem 0.5rem;

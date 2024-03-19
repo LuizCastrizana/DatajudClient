@@ -1,0 +1,94 @@
+<div class="container main ff-segoe-ui">
+  <div class="titulo-pagina">
+    <h2>Detalhes do processo</h2>
+  </div>
+  <div class="conteudo-pagina">
+    <div class="row">
+      <div class="col col-3">
+        <div class="titulo-campo">
+          <span class="nome-campo"><strong>Número do processo:</strong></span>
+        </div>
+        <div class="valor-campo">
+          <span>{{Processo.numeroProcesso}}</span>
+        </div>
+      </div>
+      <div class="col col-3">
+        <div class="titulo-campo">
+          <span class="nome-campo"><strong>Nome do caso:</strong></span>
+        </div>
+        <div class="valor-campo">
+          <span>{{Processo.nomeCaso}}</span>
+        </div>
+      </div>
+      <div class="col col-3">
+        <div class="titulo-campo">
+          <span class="nome-campo"><strong>Tribunal:</strong></span>
+        </div>
+        <div class="valor-campo">
+          <span>{{Processo.tribunal.nome!}}</span>
+        </div>
+      </div>
+      <div class="col col-3">
+        <div class="titulo-campo">
+          <span class="nome-campo"><strong>Último andamento:</strong></span>
+        </div>
+        <div class="valor-campo">
+          <span>{{Processo.ultimoAndamento}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="titulo-pagina">
+    <h2>Andamentos</h2>
+  </div>
+  <div class="conteudo-pagina div-tabela">
+    <table class="table">
+      <thead>
+        <tr>
+          <th (click)="ordenarAndamentos('Acoes')" id="thAcoes" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Ações</span>
+              <span class="img-ordenacao" id="imgAcoes"></span>
+            </div>
+          </th>
+          <th (click)="ordenarAndamentos('Codigo')" id="thCodigo" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Código</span>
+              <span class="img-ordenacao" id="imgCodigo"></span>
+            </div>
+          </th>
+          <th (click)="ordenarAndamentos('Descricao')" id="thDescricao" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Descrição</span>
+              <span class="img-ordenacao" id="imgDescricao"></span>
+            </div>
+          </th>
+          <th (click)="ordenarAndamentos('Data')" id="thData" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Data</span>
+              <span class="img-ordenacao" id="imgData"></span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(andamento of DadosPaginados.Itens; track andamento.Id) {
+          <tr>
+            <td class="coluna-acoes">
+              <div class="acoes center">
+                <button title="Exibir Complementos" id="btnExibirComplementos" class="btn" (click)="exibirComplementos(andamento.Id)">
+                  <img src="../../../../assets/img/detalhes-icon.png">
+                </button>
+              </div>
+            </td>
+            <td>{{andamento.Codigo}}</td>
+            <td>{{andamento.Descricao}}</td>
+            <td>{{andamento.DataHora}}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <app-paginador [DadosPaginador]="DadosPaginador" (messageEvent)="receiveMessageDadosPaginador($event)"></app-paginador>
+  </div>
+</div>
+

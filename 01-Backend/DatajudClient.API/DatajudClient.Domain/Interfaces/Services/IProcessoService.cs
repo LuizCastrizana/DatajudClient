@@ -1,5 +1,7 @@
 ﻿using DatajudClient.Domain.DTO.Processos;
 using DatajudClient.Domain.DTO.Shared;
+using DatajudClient.Domain.Models.Processos;
+using System.Linq.Expressions;
 
 namespace DatajudClient.Domain.Interfaces.Services
 {
@@ -29,6 +31,12 @@ namespace DatajudClient.Domain.Interfaces.Services
         /// <param name="busca"></param>
         /// <returns>Lista de processos buscados</returns>
         Task<RetornoServico<List<ReadProcessoDTO>>> ObterProcessosAsync(string busca = "");
+        /// <summary>
+        /// Obtem o processo com o id informado.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        Task<RetornoServico<ReadProcessoDTO>> ObterProcessosPorIdAsync(int id);
         /// <summary>
         /// Exclui os processos informados e todos os seus andamentos.
         /// </summary>

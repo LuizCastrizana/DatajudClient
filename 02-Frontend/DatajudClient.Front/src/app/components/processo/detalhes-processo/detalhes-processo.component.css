@@ -1,0 +1,9 @@
+.div-tabela{
+  padding: 0.5rem;
+}
+.coluna-acoes {
+  width: 60px;
+}
+.table {
+  box-shadow: inherit;
+}

@@ -1,3 +1,4 @@
+import { AndamentoProcesso } from './../../interfaces/processo/andamentoProcesso';
 import { Injectable } from "@angular/core";
 import { ReadProcessoDto } from "../../dtos/processo/readProcessoDto";
 import { Processo } from "../../interfaces/processo/processo";
@@ -26,7 +27,8 @@ export class ProcessoMapper {
       ultimoAndamento: Dto.UltimoAndamento,
       ultimaAtualizacao: Dto.UltimaAtualizacao,
       estado: EstadoMapper.FromDto(Dto.Estado),
-      tribunal: TribunalMapper.FromDto(Dto.Tribunal)
+      tribunal: TribunalMapper.FromDto(Dto.Tribunal),
+      Andamentos: Dto.Andamentos
     }
 
     return processo;
@@ -43,7 +45,8 @@ export class ProcessoMapper {
       UltimoAndamento: processo.ultimoAndamento,
       UltimaAtualizacao: processo.ultimaAtualizacao,
       Estado: EstadoMapper.ToDto(processo.estado),
-      Tribunal: TribunalMapper.ToDto(processo.tribunal)
+      Tribunal: TribunalMapper.ToDto(processo.tribunal),
+      Andamentos: processo.Andamentos!
     }
     return processoDto;
   }

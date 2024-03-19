@@ -6,6 +6,6 @@
         public int Codigo { get; set; }
         public string Descricao { get; set; }
         public DateTime DataHora { get; set; }
-        public virtual List<ReadComplementoAndamentoDTO>? Complementos { get; set; }
+        //public virtual List<ReadComplementoAndamentoDTO>? Complementos { get; set; }
     }
 }

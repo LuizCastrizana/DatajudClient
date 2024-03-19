@@ -32,6 +32,10 @@ namespace DatajudClient.API.Controllers
         public async Task<IActionResult> Get([FromQuery] string? busca) => 
             this.TratarRespostaServico(await _processoService.ObterProcessosAsync(busca ??= string.Empty));
 
+        [HttpGet("ObterProcesso/{id}")]
+        public async Task<IActionResult> Get([FromRoute] int id) => 
+            this.TratarRespostaServico(await _processoService.ObterProcessosPorIdAsync(id));
+
         [HttpPost("ExcluirProcessos")]
         public async Task<IActionResult> Delete([FromBody] DeleteProcessoDTO dto) => 
             this.TratarRespostaServico(await _processoService.ExcluirProcessos(dto.Ids));
