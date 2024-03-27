@@ -73,16 +73,18 @@
           <tr>
             <td>
               <div class="acoes">
-                <button title="Editar" id="btnEditar" class="btn" (click)="exibirModalFormulario(true, processo)">
+                <button title="Editar" id="btnEditar" class="btn btn-painel" (click)="exibirModalFormulario(true, processo)">
                   <img src="../../../../assets/img/pencil-icon.png">
                 </button>
-                <button title="Atualizar" id="btnAtualizarProcesso" class="btn" (click)="atualizarProcesso(processo)">
+                <button title="Atualizar" id="btnAtualizarProcesso" class="btn btn-painel" (click)="atualizarProcesso(processo)">
                   <img src="../../../../assets/img/atualizar-icon.png">
                 </button>
-                <button title="Detalhes" id="btnDetalhesProcesso" class="btn" routerLink="detalhes-processo/{{processo.id}}">
-                  <img src="../../../../assets/img/detalhes-icon.png">
-                </button>
-                <button title="Excluir" id="btnExcluir" class="btn" (click)="exibirModalExcluir(processo)">
+                <a routerLink="detalhes-processo/{{processo.id}}" class="btn-painel">
+                  <button title="Detalhes" id="btnDetalhesProcesso" class="btn">
+                    <img src="../../../../assets/img/detalhes-icon.png">
+                  </button>
+                </a>
+                <button title="Excluir" id="btnExcluir" class="btn btn-painel" (click)="exibirModalExcluir(processo)">
                   <img src="../../../../assets/img/lixeira-icon.png">
                 </button>
               </div>

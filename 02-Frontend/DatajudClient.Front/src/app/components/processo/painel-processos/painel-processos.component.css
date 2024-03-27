@@ -17,10 +17,10 @@
   justify-content: center;
   align-items: center;
 }
-.acoes > .btn {
+.acoes > .btn-painel {
   margin-right: 0.2rem;
   height: 38px;
 }
-.acoes > .btn:last-child {
+.acoes > .btn-painel:last-child {
   margin-right: 0;
 }

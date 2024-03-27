@@ -80,9 +80,7 @@ export class ModalFormularioProcessoComponent {
   }
 
   fechar() {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/processos']);
-    });
+    document.getElementById('modalFormularioProcesso')!.style.display = 'none';
   }
 
   //#region Validações
