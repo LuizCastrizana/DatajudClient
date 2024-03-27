@@ -11,6 +11,7 @@ export interface ReadProcessoDto {
   Comarca: string;
   Observacao: string | null;
   UltimoAndamento: Date;
+  UltimoAndamentoDescricao: string;
   UltimaAtualizacao: Date;
   Estado: ReadEstadoDto;
   Tribunal: ReadTribunalDto;

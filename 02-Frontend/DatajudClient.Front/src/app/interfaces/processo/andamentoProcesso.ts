@@ -5,5 +5,6 @@ export interface AndamentoProcesso {
   Codigo: number;
   Descricao: string;
   DataHora: Date;
+  ComplementosDescricao: string;
   Complementos: ComplementoAndamento[] | null;
 }

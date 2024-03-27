@@ -10,6 +10,7 @@ export interface Processo {
   comarca: string;
   observacao: string | null;
   ultimoAndamento: Date;
+  ultimoAndamentoDescricao: string;
   ultimaAtualizacao: Date;
   estado: Estado;
   tribunal: Tribunal;

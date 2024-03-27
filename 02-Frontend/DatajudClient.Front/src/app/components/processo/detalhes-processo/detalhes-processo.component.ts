@@ -45,8 +45,7 @@ export class DetalhesProcessoComponent {
     this.processoService.buscarPorId(this.Id!).subscribe({
       next: (resposta) => {
         this.Processo = ProcessoMapper.FromDto(resposta.dados);
-        this.ordenarAndamentos();
-        this.DadosPaginador.TotalItens = this.Processo.Andamentos!.length;
+        this.ordenarAndamentos("Data");
       },
       error:(error) => {
         this.respostaApiService.tratarRespostaApi(error);
@@ -108,6 +107,19 @@ export class DetalhesProcessoComponent {
           }
         }
         break;
+      case "Complementos":
+        this.NomeCampo = "Complementos";
+        if (this.Ordem == "asc") {
+          if (this.Processo.Andamentos != null) {
+            this.Processo.Andamentos.sort((a, b) => a.ComplementosDescricao!.localeCompare(b.ComplementosDescricao!));
+          }
+        } else {
+          this.Ordem = "desc";
+          if (this.Processo.Andamentos != null) {
+            this.Processo.Andamentos.sort((a, b) => b.ComplementosDescricao!.localeCompare(a.ComplementosDescricao!));
+          }
+        }
+        break;
       default:
         this.NomeCampo = '';
         if (this.Processo.Andamentos != null) {
@@ -117,6 +129,7 @@ export class DetalhesProcessoComponent {
     }
     this.tratarIconeOrdenacao();
     this.DadosPaginador.PaginaAtual = 1;
+    this.DadosPaginador.TotalItens = this.Processo.Andamentos!.length;
     this.paginarAndamentos();
   }
 
@@ -126,10 +139,12 @@ export class DetalhesProcessoComponent {
     let imgCodigo = document.getElementById('imgCodigo');
     let imgDescricao = document.getElementById('imgDescricao');
     let imgData = document.getElementById('imgData');
+    let imgComplementos = document.getElementById('imgComplementos');
 
     imgCodigo!.innerHTML = '';
     imgDescricao!.innerHTML = '';
     imgData!.innerHTML = '';
+    imgComplementos!.innerHTML = '';
 
     switch (this.NomeCampo) {
       case 'Codigo':
@@ -153,6 +168,13 @@ export class DetalhesProcessoComponent {
           imgData!.innerHTML = imgDesc;
         }
         break;
+      case 'Complementos':
+        if (this.Ordem == 'asc') {
+          imgComplementos!.innerHTML = imgAsc;
+        } else {
+          imgComplementos!.innerHTML = imgDesc;
+        }
+        break;
       default:
         break;
       }
@@ -161,7 +183,7 @@ export class DetalhesProcessoComponent {
   paginarAndamentos(): void {
     this.DadosPaginados.Pagina = this.DadosPaginador.PaginaAtual;
     this.DadosPaginados.ItensPorPagina = this.DadosPaginador.ItensPorPagina;
-    //this.DadosPaginados.TotalItens = this.DadosPaginador.TotalItens;
+    this.DadosPaginados.TotalItens = this.DadosPaginador.TotalItens;
 
     let itensPagina: ItemPagina<AndamentoProcesso>[] = [];
     let pagina = 1;

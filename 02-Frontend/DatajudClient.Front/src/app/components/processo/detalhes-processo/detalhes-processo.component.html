@@ -33,7 +33,7 @@
           <span class="nome-campo"><strong>Último andamento:</strong></span>
         </div>
         <div class="valor-campo">
-          <span>{{Processo.ultimoAndamento}}</span>
+          <span>{{Processo.ultimoAndamento}} - {{Processo.ultimoAndamentoDescricao}}</span>
         </div>
       </div>
     </div>
@@ -45,12 +45,12 @@
     <table class="table">
       <thead>
         <tr>
-          <th (click)="ordenarAndamentos('Acoes')" id="thAcoes" class="campo-ordenacao">
+          <!-- <th (click)="ordenarAndamentos('Acoes')" id="thAcoes" class="campo-ordenacao">
             <div class="titulo-tabela">
               <span class="nome-campo">Ações</span>
               <span class="img-ordenacao" id="imgAcoes"></span>
             </div>
-          </th>
+          </th> -->
           <th (click)="ordenarAndamentos('Codigo')" id="thCodigo" class="campo-ordenacao">
             <div class="titulo-tabela">
               <span class="nome-campo">Código</span>
@@ -61,6 +61,12 @@
             <div class="titulo-tabela">
               <span class="nome-campo">Descrição</span>
               <span class="img-ordenacao" id="imgDescricao"></span>
+            </div>
+          </th>
+          <th (click)="ordenarAndamentos('Complementos')" id="thComplementos" class="campo-ordenacao">
+            <div class="titulo-tabela">
+              <span class="nome-campo">Complementos</span>
+              <span class="img-ordenacao" id="imgComplementos"></span>
             </div>
           </th>
           <th (click)="ordenarAndamentos('Data')" id="thData" class="campo-ordenacao">
@@ -74,15 +80,16 @@
       <tbody>
         @for(andamento of DadosPaginados.Itens; track andamento.Id) {
           <tr>
-            <td class="coluna-acoes">
+            <!-- <td class="coluna-acoes">
               <div class="acoes center">
                 <button title="Exibir Complementos" id="btnExibirComplementos" class="btn" (click)="exibirComplementos(andamento.Id)">
                   <img src="../../../../assets/img/detalhes-icon.png">
                 </button>
               </div>
-            </td>
+            </td> -->
             <td>{{andamento.Codigo}}</td>
             <td>{{andamento.Descricao}}</td>
+            <td>{{andamento.ComplementosDescricao}}</td>
             <td>{{andamento.DataHora}}</td>
           </tr>
         }

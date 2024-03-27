@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
@@ -16,6 +16,7 @@ import { HomeComponent } from './components/home/home.component';
 import { PainelProcessosComponent } from './components/processo/painel-processos/painel-processos.component';
 import { ModalFormularioProcessoComponent } from './components/processo/modal-formulario/modal-formulario.component';
 import { DetalhesProcessoComponent } from './components/processo/detalhes-processo/detalhes-processo.component';
+import { ModalComplementosComponent } from './components/processo/modal-complementos/modal-complementos.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { DetalhesProcessoComponent } from './components/processo/detalhes-proces
     PainelProcessosComponent,
     ModalFormularioProcessoComponent,
     DetalhesProcessoComponent,
+    ModalComplementosComponent,
   ],
   imports: [
     CommonModule,
@@ -41,7 +43,7 @@ import { DetalhesProcessoComponent } from './components/processo/detalhes-proces
   providers: [
     provideClientHydration(),
     provideHttpClient(withFetch()),
-    { provide: LOCALE_ID, useValue: 'pt-br' }
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
   ],
   bootstrap: [AppComponent]
 })

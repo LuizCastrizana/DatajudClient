@@ -35,7 +35,7 @@ namespace DatajudClient.Domain.Models.Processos
         {
             if(NumeroProcesso.Length == 20)
             {
-                return $"{NumeroProcesso.Substring(0, 7)}.{NumeroProcesso.Substring(7, 2)}.{NumeroProcesso.Substring(9, 4)}.{NumeroProcesso.Substring(13, 4)}.{NumeroProcesso.Substring(17, 2)}";
+                return $"{NumeroProcesso.Substring(0, 7)}-{NumeroProcesso.Substring(7, 2)}.{NumeroProcesso.Substring(9, 4)}.{NumeroProcesso.Substring(13, 4)}.{NumeroProcesso.Substring(17, 2)}";
             }
             else
             {

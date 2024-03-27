@@ -104,7 +104,7 @@ namespace DatajudClient.Domain.Services
 
                 foreach (var numero in dto.Numeros)
                 {
-                    var processo = _processoRepository.Obter(x => x.NumeroProcesso == numero).FirstOrDefault();
+                    var processo = _processoRepository.Obter(x => x.NumeroProcesso == ApenasNumeros(numero)).FirstOrDefault();
 
                     if (processo != null)
                     {
@@ -112,7 +112,7 @@ namespace DatajudClient.Domain.Services
 
                         if (retornoDatajud != null)
                         {
-                            if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO)
+                            if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO )
                                 await ProcessarRetornoDatajud(retornoDatajud.Dados, processo);
                             else
                                 listProcessoErro.Add((processo.NumeroProcesso, String.Join(',', retornoDatajud.Erros)));
@@ -128,7 +128,7 @@ namespace DatajudClient.Domain.Services
                     }
                 }
 
-                if (listProcessoErro.Count > 0)
+                if (listProcessoErro.Count() > 0)
                 {
                     retorno.Erros = listProcessoErro.Select(x => { return string.Concat(x.processo, ": ", x.msg); }).ToList();
                     retorno.Status = StatusRetornoEnum.ERRO;
@@ -184,17 +184,28 @@ namespace DatajudClient.Domain.Services
             try
             {
                 busca = busca.ToUpper();
+                var buscaNumero = ApenasNumeros(busca);
 
                 var processos = await _processoRepository.ObterAsync(x => 
-                x.NumeroProcesso.ToUpper().Contains(busca) 
+                (buscaNumero.Length > 0 && x.NumeroProcesso.Contains(buscaNumero))
                 ||
                 x.NomeCaso.ToUpper().Contains(busca) 
                 ||
                 x.Tribunal.Nome.ToUpper().Contains(busca) 
                 ||
-                x.Tribunal.Sigla.ToUpper().Contains(busca));
+                x.Tribunal.Sigla.ToUpper().Contains(busca)
+                ||
+                x.Andamentos.Select(x => x.Descricao.ToUpper()).Any(x => x.Contains(busca)));
+
+                //processos.ForEach(x =>
+                //{
+                //    x.NumeroProcesso = x.GetNumeroFormatado();
+                //});
 
                 retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
+
+                PreencherUltimoAndamentoEComplementos(retorno.Dados);
+
                 retorno.Status = StatusRetornoEnum.SUCESSO;
                 retorno.Mensagem = "Processos obtidos com sucesso.";
             }
@@ -215,6 +226,9 @@ namespace DatajudClient.Domain.Services
                 var processos = (await _processoRepository.ObterAsync(x => x.Id == id)).FirstOrDefault();
 
                 retorno.Dados = _mapper.Map<ReadProcessoDTO>(processos);
+
+                PreencherUltimoAndamentoEComplementos(new List<ReadProcessoDTO>() { retorno.Dados });
+
                 retorno.Status = StatusRetornoEnum.SUCESSO;
                 retorno.Mensagem = "Processos obtidos com sucesso.";
             }
@@ -279,35 +293,43 @@ namespace DatajudClient.Domain.Services
 
         private async Task ProcessarRetornoDatajud(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
+            if (respostaDatajud.hits.hits.Count == 0)
+                return;
+
             await MapearAndamentosDoProcesso(respostaDatajud, processo);
+
             processo.UltimoAndamento = processo.Andamentos != null ? processo.Andamentos.OrderByDescending(x => x.DataHora).FirstOrDefault().DataHora : DateTime.MinValue;
             processo.UltimaAtualizacao = DateTime.Now;
+
             await _processoRepository.SalvarAlteracoesAsync();
         }
 
         private async Task MapearAndamentosDoProcesso(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
-            var datajudAndamentos = new ConcurrentBag<Movimento>(respostaDatajud.hits.hits.Select(x => x._source.movimentos).First());
+            var processoAndamentos = new ConcurrentBag<AndamentoProcesso>(processo.Andamentos != null ? processo.Andamentos : new List<AndamentoProcesso>());
             var andamentosIncluir = new ConcurrentBag<AndamentoProcesso>();
-            ConcurrentBag<ComplementoTabelado> dataJudComplementos;
+            
+            var listMovimento = new List<Movimento>();
+            respostaDatajud.hits.hits.ForEach(x => listMovimento.AddRange(x._source.movimentos));
+            var datajudAndamentos = new ConcurrentBag<Movimento>(listMovimento);
 
             await Parallel.ForEachAsync(datajudAndamentos, async (andamento, ct) =>
             {
-                var andamentoExistente = processo.Andamentos != null && processo.Andamentos.Select(x => x.DataHora).Contains(andamento.dataHora);
+                var andamentoExistente = processoAndamentos.Count() > 0 && processoAndamentos.Select(x => x.DataHora.ToString()).Contains(andamento.dataHora.ToString());
                 var complementosIncluir = new ConcurrentBag<ComplementoAndamento>();
 
                 if (!andamentoExistente)
                 {
                     var andamentoProcesso = new AndamentoProcesso()
                     {
-                        Codigo = andamento.codigo,
+                        Codigo = Convert.ToInt32(andamento.codigo),
                         Descricao = andamento.nome,
                         DataHora = andamento.dataHora,
                     };
 
                     if (andamento.complementosTabelados != null)
                     {
-                        dataJudComplementos = new ConcurrentBag<ComplementoTabelado>(andamento.complementosTabelados);
+                        var dataJudComplementos = new ConcurrentBag<ComplementoTabelado>(andamento.complementosTabelados);
 
                         if (dataJudComplementos != null)
                         {
@@ -315,8 +337,8 @@ namespace DatajudClient.Domain.Services
                             {
                                 var complementoAndamento = new ComplementoAndamento()
                                 {
-                                    Codigo = complemento.codigo,
-                                    Valor = complemento.valor,
+                                    Codigo = Convert.ToInt32(andamento.codigo),
+                                    Valor = Convert.ToInt32(complemento.valor),
                                     Nome = complemento.nome,
                                     Descricao = complemento.descricao,
                                 };
@@ -326,9 +348,9 @@ namespace DatajudClient.Domain.Services
 
                             andamentoProcesso.Complementos = complementosIncluir.ToList();
                         }
-
-                        andamentosIncluir.Add(andamentoProcesso);
                     }
+
+                    andamentosIncluir.Add(andamentoProcesso);
                 }
             });
 
@@ -336,6 +358,49 @@ namespace DatajudClient.Domain.Services
                 processo.Andamentos = new List<AndamentoProcesso>();
 
             processo.Andamentos.AddRange(andamentosIncluir);
+        }
+
+        private void PreencherUltimoAndamentoEComplementos(List<ReadProcessoDTO> processos)
+        {
+            // TODO: Refatorar logica a baixo para incluir o campo UltimoAndamentoDescricao na model Processo e no banco de dados
+            // e assim preencher o valor no momento de cadastrar o processo.
+            processos.ForEach(x =>
+            {
+                var ultimoAndamento = x.Andamentos.OrderByDescending(x => x.DataHora).FirstOrDefault();
+                x.UltimoAndamentoDescricao = ultimoAndamento != null ? ultimoAndamento.Descricao : string.Empty;
+
+                if (x.Andamentos != null && x.Andamentos.Count() > 0)
+                {
+                    //var complemento = ultimoAndamento.Complementos != null && ultimoAndamento.Complementos.Count() > 0 ? ultimoAndamento.Complementos.FirstOrDefault() : null;
+                    var complemento = string.Empty;
+
+                    if (ultimoAndamento != null)
+                    {
+                        if (ultimoAndamento.Complementos != null && ultimoAndamento.Complementos.Count() > 0)
+                            complemento = string.Join("| ", ultimoAndamento.Complementos.Select(x => string.Concat(x.Descricao, ": ", x.Nome)));
+
+                        x.UltimoAndamentoDescricao = ultimoAndamento.Descricao + (string.IsNullOrWhiteSpace(complemento) ? string.Empty : string.Concat(" - ", complemento));
+                    }
+
+                    PreencherComplementosDescricao(x.Andamentos);
+                }
+            });
+        }
+
+        private void PreencherComplementosDescricao(List<ReadAndamentoDTO> andamentos)
+        {
+            andamentos.ForEach(x =>
+            {
+                if (x.Complementos != null && x.Complementos.Count() > 0)
+                {
+                    x.ComplementosDescricao = string.Join("| ", x.Complementos.Select(x => string.Concat(x.Descricao, ": ", x.Nome)));
+                }
+            });
+        }
+
+        private string ApenasNumeros(string texto)
+        {
+            return new string(texto.Where(char.IsDigit).ToArray());
         }
 
         #endregion

@@ -69,7 +69,7 @@
         </tr>
       </thead>
       <tbody>
-        @for(processo of Processos; track processo.id) {
+        @for(processo of DadosPaginados.Itens; track processo.id) {
           <tr>
             <td>
               <div class="acoes">
@@ -90,7 +90,7 @@
             <td>{{processo.numeroProcesso}}</td>
             <td>{{processo.nomeCaso}}</td>
             <td>{{processo.tribunal.sigla}} - {{processo.tribunal.nome}}</td>
-            <td>{{processo.ultimoAndamento}}</td>
+            <td>{{processo.ultimoAndamento}} - {{processo.ultimoAndamentoDescricao}}</td>
             <td>{{processo.ultimaAtualizacao}}</td>
           </tr>
         }

@@ -13,11 +13,11 @@ export class HomeComponent {
       link: 'processos',
       icone: 'processo-icon.png'
     },
-    {
-      nome: 'Tribunais',
-      link: 'tribunais',
-      icone: 'tribunal-icon.png'
-    },
+    // {
+    //   nome: 'Tribunais',
+    //   link: 'tribunais',
+    //   icone: 'tribunal-icon.png'
+    // },
   ];
 
   ngOnInit(): void {

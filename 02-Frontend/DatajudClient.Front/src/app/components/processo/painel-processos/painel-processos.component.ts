@@ -25,7 +25,7 @@ export class PainelProcessosComponent {
 
   DadosPaginador: DadosPaginador = {
     PaginaAtual: 1,
-    ItensPorPagina: 15,
+    ItensPorPagina: 10,
     TotalItens: 0,
   };
 
@@ -119,19 +119,19 @@ export class PainelProcessosComponent {
       case "UltimoAndamento":
         this.NomeCampo = "UltimoAndamento";
         if (this.Ordem == "asc") {
-          this.Processos.sort((a, b) => a.ultimoAndamento.getTime() - b.ultimoAndamento.getTime());
+          this.Processos.sort((a, b) => new Date(a.ultimoAndamento).getTime() - new Date(b.ultimoAndamento).getTime());
         } else {
           this.Ordem = "desc";
-          this.Processos.sort((a, b) => b.ultimoAndamento.getTime() - a.ultimoAndamento.getTime());
+          this.Processos.sort((a, b) => new Date(b.ultimoAndamento).getTime() - new Date(a.ultimoAndamento).getTime());
         }
         break;
       case "UltimaAtualizacao":
         this.NomeCampo = "UltimaAtualizacao";
         if (this.Ordem == "asc") {
-          this.Processos.sort((a, b) => a.ultimaAtualizacao.getTime() - b.ultimaAtualizacao.getTime());
+          this.Processos.sort((a, b) => new Date(a.ultimaAtualizacao).getTime() - new Date(b.ultimaAtualizacao).getTime());
         } else {
           this.Ordem = "desc";
-          this.Processos.sort((a, b) => b.ultimaAtualizacao.getTime() - a.ultimaAtualizacao.getTime());
+          this.Processos.sort((a, b) => new Date(b.ultimaAtualizacao).getTime() - new Date(a.ultimaAtualizacao).getTime());
         }
         break;
       default:
@@ -140,6 +140,9 @@ export class PainelProcessosComponent {
         break;
     }
     this.tratarIconeOrdenacao();
+    this.DadosPaginador.PaginaAtual = 1;
+    this.DadosPaginador.TotalItens = this.Processos.length;
+    this.paginarProcessos();
   }
 
   tratarIconeOrdenacao() {
@@ -325,6 +328,13 @@ export class PainelProcessosComponent {
         this.respostaApiService.tratarRespostaApi(err)
       }
     });
+    let dadosFeedback = {
+      Id: "feedback1",
+      TipoFeedback: TipoFeedbackEnum.Sucesso,
+      Titulo: "Sucesso!",
+      Mensagem: "Iniciando atualização dos processos."
+    } as DadosFeedbackPopUp;
+    this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
   }
 
 }
