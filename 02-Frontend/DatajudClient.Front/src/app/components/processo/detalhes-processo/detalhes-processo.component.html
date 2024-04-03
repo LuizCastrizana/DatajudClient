@@ -9,7 +9,7 @@
           <span class="nome-campo"><strong>Número do processo:</strong></span>
         </div>
         <div class="valor-campo">
-          <span>{{Processo.numeroProcesso}}</span>
+          <span>{{Processo.getNumeroProcessoFormatado()}}</span>
         </div>
       </div>
       <div class="col col-3">
@@ -90,7 +90,7 @@
             <td>{{andamento.Codigo}}</td>
             <td>{{andamento.Descricao}}</td>
             <td>{{andamento.ComplementosDescricao}}</td>
-            <td>{{andamento.DataHora}}</td>
+            <td>{{andamento.DataHora | date : 'dd/MM/yyyy hh:mm'}}</td>
           </tr>
         }
       </tbody>
@@ -98,4 +98,3 @@
     <app-paginador [DadosPaginador]="DadosPaginador" (messageEvent)="receiveMessageDadosPaginador($event)"></app-paginador>
   </div>
 </div>
-

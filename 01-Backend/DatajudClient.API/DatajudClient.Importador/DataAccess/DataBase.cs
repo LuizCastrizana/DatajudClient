@@ -16,6 +16,9 @@ namespace DatajudClient.Importador.DataAccess
 
         public int Insert(Estado estado)
         {
+            if(EstadoExiste(estado.Uf))
+                return 0;
+
             var sql = "INSERT INTO estado (nome, uf, codigoibge, datainclusao, dataalteracao, ativo) VALUES (@nome, @uf, @codigoibge, @datainclusao, @dataalteracao, @ativo)";
 
             using (var command = new MySqlCommand(sql, Connection))
@@ -35,6 +38,9 @@ namespace DatajudClient.Importador.DataAccess
 
         public int Insert(ProcessoPlanilha processo)
         {
+            if(ProcessoExiste(processo.NumeroDoProcesso))
+                return 0;
+
             var sql = "INSERT INTO processo (numeroprocesso, nomecaso, vara, comarca, observacao, estadoid, tribunalid, datainclusao, dataalteracao, ativo) " +
                 "VALUES (@numeroprocesso, @nomecaso, @vara, @comarca, @observacao, @estadoid, @tribunalid, @datainclusao, @dataalteracao, @ativo)";
 
@@ -69,6 +75,28 @@ namespace DatajudClient.Importador.DataAccess
         public void Dispose()
         {
             Connection.Close();
+        }
+
+        private bool EstadoExiste(string uf)
+        {
+            var sql = "SELECT COUNT(*) FROM estado WHERE uf = @uf";
+            using (var command = new MySqlCommand(sql, Connection))
+            {
+                command.Parameters.AddWithValue("@uf", uf);
+                var retorno = Convert.ToInt32(command.ExecuteScalar());
+                return retorno > 0;
+            }
+        }
+
+        private bool ProcessoExiste(string numero)
+        {
+            var sql = "SELECT COUNT(*) FROM processo WHERE numeroprocesso = @numeroprocesso";
+            using (var command = new MySqlCommand(sql, Connection))
+            {
+                command.Parameters.AddWithValue("@numeroprocesso", numero);
+                var retorno = Convert.ToInt32(command.ExecuteScalar());
+                return retorno > 0;
+            }
         }
 
         private (int tribunalId, int estadoId) ObterDadosTribunalPorNumero(string numero)

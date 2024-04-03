@@ -1,9 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+
+import ptBr from '@angular/common/locales/pt';
+registerLocaleData(ptBr)
 
 import { AppComponent } from './app.component';
 import { CabecalhoComponent } from "./components/shared/cabecalho/cabecalho.component";

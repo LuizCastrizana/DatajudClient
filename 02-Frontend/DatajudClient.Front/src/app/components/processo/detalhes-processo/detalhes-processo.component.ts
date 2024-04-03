@@ -1,5 +1,5 @@
 import { AndamentoProcesso } from './../../../interfaces/processo/andamentoProcesso';
-import { Processo } from './../../../interfaces/processo/processo';
+import { Processo } from './../../../models/processo/processo';
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProcessoService } from '../../../services/processo/processo.service';
@@ -27,7 +27,7 @@ export class DetalhesProcessoComponent {
 
   DadosPaginador: DadosPaginador = {
     PaginaAtual: 1,
-    ItensPorPagina: 10,
+    ItensPorPagina: 15,
     TotalItens: 0,
   };
 

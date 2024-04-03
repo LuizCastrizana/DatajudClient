@@ -2,7 +2,7 @@ import { UpdateProcessoDto } from './../../../dtos/processo/updateProcessoDto';
 import { RespostaApiService } from './../../../services/shared/resposta-api.service';
 import { Component, OnInit } from '@angular/core';
 import { DadosPaginador } from '../../../interfaces/shared/paginacao/dadosPaginador';
-import { Processo } from '../../../interfaces/processo/processo';
+import { Processo } from '../../../models/processo/processo';
 import { DadosPaginados } from '../../../interfaces/shared/paginacao/dadosPaginados';
 import { ProcessoService } from '../../../services/processo/processo.service';
 import { FeedbackService } from '../../../services/shared/feedback.service';

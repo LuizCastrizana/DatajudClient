@@ -2,7 +2,7 @@ import { Estado } from "../endereco/estado";
 import { Tribunal } from "../tribunal/tribunal";
 import { AndamentoProcesso } from "./andamentoProcesso";
 
-export interface Processo {
+export interface IProcesso {
   id: number;
   numeroProcesso: string;
   nomeCaso: string;
@@ -15,4 +15,6 @@ export interface Processo {
   estado: Estado;
   tribunal: Tribunal;
   Andamentos: AndamentoProcesso[] | null;
+
+  getNumeroProcessoFormatado(): string;
 }

@@ -89,11 +89,11 @@
                 </button>
               </div>
             </td>
-            <td>{{processo.numeroProcesso}}</td>
+            <td>{{processo.getNumeroProcessoFormatado()}}</td>
             <td>{{processo.nomeCaso}}</td>
             <td>{{processo.tribunal.sigla}} - {{processo.tribunal.nome}}</td>
-            <td>{{processo.ultimoAndamento}} - {{processo.ultimoAndamentoDescricao}}</td>
-            <td>{{processo.ultimaAtualizacao}}</td>
+            <td>{{processo.ultimoAndamento | date : 'dd/MM/yyyy hh:mm'}} - {{processo.ultimoAndamentoDescricao}}</td>
+            <td>{{processo.ultimaAtualizacao | date : 'dd/MM/yyyy hh:mm'}}</td>
           </tr>
         }
       </tbody>

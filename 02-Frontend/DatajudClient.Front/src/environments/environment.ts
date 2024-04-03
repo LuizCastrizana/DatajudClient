@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  //datajudClientApiAdress: 'https://k6hzlh3f-7294.brs.devtunnels.ms'
+  //datajudClientApiAdress: 'https://906lwq4c-7294.brs.devtunnels.ms'
   datajudClientApiAdress: 'https://localhost:7294'
 };
 

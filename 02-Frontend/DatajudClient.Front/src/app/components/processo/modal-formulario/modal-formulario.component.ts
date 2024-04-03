@@ -6,7 +6,7 @@ import { TribunalMapper } from './../../../mappers/tribunal/tribunalMapper';
 import { TribunalService } from './../../../services/tribunal/tribunal.service';
 import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Processo } from '../../../interfaces/processo/processo';
+import { IProcesso } from '../../../interfaces/processo/processo';
 import { ValidacaoService } from '../../../services/shared/validacao.service';
 import { RespostaApiService } from '../../../services/shared/resposta-api.service';
 
@@ -25,8 +25,8 @@ export class ModalFormularioProcessoComponent {
     private router: Router
   ) {}
 
-  @Input() Processo: Processo = {} as Processo;
-  @Output() ProcessoChange = new EventEmitter<Processo>();
+  @Input() Processo: IProcesso = {} as IProcesso;
+  @Output() ProcessoChange = new EventEmitter<IProcesso>();
   @Input() Edicao: boolean = false;
   @Output() EventoEdicao = new EventEmitter<boolean>();
 
@@ -37,6 +37,19 @@ export class ModalFormularioProcessoComponent {
   Estados: Estado[] = [];
 
   ngOnInit(): void {
+    this.obterListasTribunalEstado();
+  }
+
+  ngOnChanges() {
+    if (this.Processo.tribunal != undefined) {
+      this.TribunalId = this.Processo.tribunal.id;
+    }
+    if (this.Processo.estado != undefined) {
+      this.EstadoId = this.Processo.estado.id;
+    }
+  }
+
+  obterListasTribunalEstado() {
     this.tribunalService.listar().subscribe({
       next: (result) => {
         result.dados.forEach(tribunal => {
@@ -44,8 +57,7 @@ export class ModalFormularioProcessoComponent {
         });
       },
       error: (err) => {
-        this.respostaApiService.tratarRespostaApi(err);
-        this.router.navigate(['/processos']);
+        this.respostaApiService.tratarRespostaApi( { status: 500, error: { mensagem: 'Não foi possível obter a lista de tribunais.' } } );
       },
     });
 
@@ -56,19 +68,9 @@ export class ModalFormularioProcessoComponent {
         });
       },
       error: (err) => {
-        this.respostaApiService.tratarRespostaApi(err);
-        this.router.navigate(['/processos']);
+        this.respostaApiService.tratarRespostaApi( { status: 500, error: { mensagem: 'Não foi possível obter a lista de estados.' } } );
       },
     });
-  }
-
-  ngOnChanges() {
-    if (this.Processo.tribunal != undefined) {
-      this.TribunalId = this.Processo.tribunal.id;
-    }
-    if (this.Processo.estado != undefined) {
-      this.EstadoId = this.Processo.estado.id;
-    }
   }
 
   salvarDados(){

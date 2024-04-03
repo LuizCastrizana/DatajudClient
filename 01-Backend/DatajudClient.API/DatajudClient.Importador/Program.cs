@@ -7,90 +7,84 @@ namespace DatajudClient.Importador
     {
         static void Main(string[] args)
         {
-            var comando = string.Empty;
-            var caminhoArquivo = string.Empty;
-            var contador = 0;
+             Importacao();
+        }
+
+        private static void Importacao()
+        {
+            var caminhoImportar = "..\\..\\..\\..\\DatajudClient.Importador\\Importar\\";
 
             while (true)
             {
                 try
                 {
-                    Console.Clear();
+                    var comando = string.Empty;
+                    var nomeArquivo = string.Empty;
+                    var contador = 0;
 
+                    Console.Clear();
                     Console.Write("Digite 1 para estados ou 2 para processos: ");
                     comando = Console.ReadLine();
 
-                    comando = string.IsNullOrWhiteSpace(comando) ? string.Empty : comando;
+                    if (string.IsNullOrWhiteSpace(comando))
+                        throw new Exception("Comando inválido.");
 
                     if (comando.ToUpper() == "SAIR")
                         break;
 
-                    if (comando == "1")
+                    Console.Write("Insira nome do arquivo: ");
+                    nomeArquivo = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(nomeArquivo))
+                        throw new Exception("Nome do arquivo inválido.");
+
+                    switch (comando)
                     {
-                        contador = 0;
+                        case "1":
+                            nomeArquivo = string.Concat(nomeArquivo, ".csv");
 
-                        Console.Write("Insira caminho do arquivo: ");
-                        caminhoArquivo = Console.ReadLine();
+                            var estados = LeitorEstados.LerEstados(caminhoImportar + nomeArquivo);
 
-                        if (string.IsNullOrEmpty(caminhoArquivo))
-                            continue;
-
-                        if (caminhoArquivo.ToUpper() == "SAIR")
-                            break;
-
-                        var estados = LeitorEstados.LerEstados(caminhoArquivo);
-
-                        using (var db = new DataBase())
-                        {
-                            foreach (var estado in estados)
+                            using (var db = new DataBase())
                             {
-                                if (db.Insert(estado) == 1)
-                                    contador++;
+                                foreach (var estado in estados)
+                                {
+                                    contador += db.Insert(estado);
+                                }
                             }
-                        }
 
-                        Console.Clear();
-                        Console.WriteLine(string.Concat("Qtd. de estados incluídos: ", contador));
-                    }
-                    else if (comando == "2")
-                    {
-                        contador = 0;
+                            Console.Clear();
+                            Console.WriteLine(string.Concat("Qtd. de estados incluídos: ", contador));
 
-                        Console.Write("Insira caminho do arquivo: ");
-                        caminhoArquivo = Console.ReadLine();
-
-                        if (string.IsNullOrEmpty(caminhoArquivo))
-                            continue;
-
-                        if (caminhoArquivo.ToUpper() == "SAIR")
                             break;
+                        case "2":
+                            nomeArquivo = string.Concat(nomeArquivo, ".xlsx");
 
-                        var processos = LeitorProcessos.LerPlanilha(caminhoArquivo);
+                            var processos = LeitorProcessos.LerPlanilha(caminhoImportar + nomeArquivo);
 
-                        using (var db = new DataBase())
-                        {
-                            foreach (var processo in processos)
+                            using (var db = new DataBase())
                             {
-                                if (db.Insert(processo) == 1)
-                                    contador++;
+                                foreach (var processo in processos)
+                                {
+                                    contador += db.Insert(processo);
+                                }
                             }
-                        }
 
-                        Console.Clear();
-                        Console.WriteLine(string.Concat("Qtd. de processos incluídos: ", contador));
+                            Console.Clear();
+                            Console.WriteLine(string.Concat("Qtd. de processos incluídos: ", contador));
+
+                            break;
+                        default:
+                            throw new Exception("Comando inválido.");
                     }
-                    else
-                    {
-                        Console.WriteLine("Comando inválido");
-                    }
-                    Console.ReadKey();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    Console.ReadKey();
                 }
-            } 
+
+                Console.ReadKey();
+            }
         }
     }
 }

@@ -29,47 +29,31 @@ namespace DatajudClient.Domain.Services
 
             try
             {
-                var processos = new ConcurrentBag<Processo>(_mapper.Map<IEnumerable<Processo>>(dtos));
-                var listProcessoErro = new ConcurrentBag<(Processo processo, string mensagem)>();
-                var listProcessosErroDatajud = new ConcurrentBag<(Processo processo, string mensagem)>();
+                var processos = new List<Processo>(_mapper.Map<IEnumerable<Processo>>(dtos));
+                var listProcessoErro = new List<(Processo processo, string mensagem)>();
 
-                await Parallel.ForEachAsync(processos, async (processo, ct) =>
+                foreach(var processo in processos) 
                 {
+                    var processoExistente = _processoRepository.Obter(x => x.NumeroProcesso == processo.NumeroProcesso).FirstOrDefault() != null;
+
+                    if (processoExistente)
+                    {
+                        listProcessoErro.Add((processo, "Processo já cadastrado."));
+                        continue;
+                    }
+
                     if (await _processoRepository.AdicionarAsync(processo) == 0)
                         listProcessoErro.Add((processo, "Nenhum registro alterado no banco de dados."));
-                });
+                }
 
-                var processosSucesso = new ConcurrentBag<Processo>(processos.Except(listProcessoErro.Select(x => x.processo)));
+                var numerosProcessosSucesso = processos.Except(listProcessoErro.Select(x => x.processo)).Select(x => x.NumeroProcesso).ToList();
+                var respostaAtualizarProcessos = await AtualizarProcessosAsync(new UpdateProcessoDTO() { Numeros = numerosProcessosSucesso });
 
-                await Parallel.ForEachAsync(processosSucesso, async (processo, ct) =>
-                {
-                    try
-                    {
-                        var retornoDatajud = await _datajudService.ObterDadosProcessoAsync(processo);
-
-                        if (retornoDatajud != null)
-                        {
-                            if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO)
-                                await ProcessarRetornoDatajud(retornoDatajud.Dados, processo);
-                            else
-                                listProcessoErro.Add((processo, string.Join(", ", retornoDatajud.Erros != null ? retornoDatajud.Erros : string.Empty)));
-                        }
-                        else
-                        {
-                            listProcessosErroDatajud.Add((processo, "Erro ao obter dados do Datajud."));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        listProcessosErroDatajud.Add((processo, ex.Message));
-                    }
-                });
-
-                if (listProcessoErro.Count == 0 && listProcessosErroDatajud.Count == 0)
+                if (listProcessoErro.Count == 0 && respostaAtualizarProcessos.Status == StatusRetornoEnum.SUCESSO)
                 {
                     retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
                     retorno.Status = StatusRetornoEnum.SUCESSO;
-                    retorno.Mensagem = "Processo(s) incluído(s) com sucesso.";                    
+                    retorno.Mensagem = "Processo(s) incluído(s) e atualizado(s) com sucesso.";                    
                 }
                 else
                 {
@@ -78,11 +62,11 @@ namespace DatajudClient.Domain.Services
                     if (listProcessoErro.Count > 0)
                         retorno.Erros.AddRange(listProcessoErro.Select(x => x.processo.NumeroProcesso + ": " + x.mensagem).ToList());
 
-                    if (listProcessosErroDatajud.Count > 0)
-                        retorno.Erros.AddRange(listProcessosErroDatajud.Select(x => x.processo.NumeroProcesso + ": " + x.mensagem).ToList());
+                    if (respostaAtualizarProcessos.Erros != null && respostaAtualizarProcessos.Erros.Count() > 0)
+                        retorno.Erros.AddRange(respostaAtualizarProcessos.Erros);
 
                     retorno.Status = StatusRetornoEnum.ERRO;
-                    retorno.Mensagem = "Erro ao incluir ou obter atualizações do(s) processo(s).";
+                    retorno.Mensagem = "Não foi possível incluir ou obter andamentos de todos os processos informados.";
                 }
             }
             catch (Exception ex)
@@ -106,33 +90,30 @@ namespace DatajudClient.Domain.Services
                 {
                     var processo = _processoRepository.Obter(x => x.NumeroProcesso == ApenasNumeros(numero)).FirstOrDefault();
 
-                    if (processo != null)
-                    {
-                        var retornoDatajud = await _datajudService.ObterDadosProcessoAsync(processo);
-
-                        if (retornoDatajud != null)
-                        {
-                            if (retornoDatajud.Status == StatusRetornoEnum.SUCESSO )
-                                await ProcessarRetornoDatajud(retornoDatajud.Dados, processo);
-                            else
-                                listProcessoErro.Add((processo.NumeroProcesso, String.Join(',', retornoDatajud.Erros)));
-                        }
-                        else
-                        {
-                            listProcessoErro.Add((processo.NumeroProcesso, "Não houve retorno do Datajud."));
-                        }
-                    }
-                    else
+                    if (processo == null)
                     {
                         listProcessoErro.Add((numero, "Processo não encontrado."));
+                        continue;
                     }
+
+                    var retornoDatajud = await _datajudService.ObterDadosProcessoAsync(processo);
+
+                    if (retornoDatajud == null || retornoDatajud.Dados == null || retornoDatajud.Status != StatusRetornoEnum.SUCESSO)
+                    {
+                        var msg = retornoDatajud != null && retornoDatajud.Erros != null ? string.Join(", ", retornoDatajud.Erros) : "Erro ao obter dados do Datajud.";
+                        listProcessoErro.Add((processo.NumeroProcesso, msg));
+                        continue;
+                    }
+
+                    if (await ProcessarRetornoDatajud(retornoDatajud.Dados, processo) == false)
+                        listProcessoErro.Add((processo.NumeroProcesso, "Erro ao processar retorno do Datajud."));
                 }
 
                 if (listProcessoErro.Count() > 0)
                 {
                     retorno.Erros = listProcessoErro.Select(x => { return string.Concat(x.processo, ": ", x.msg); }).ToList();
                     retorno.Status = StatusRetornoEnum.ERRO;
-                    retorno.Mensagem = "Não foi possível atualizar todos os processos informados.";
+                    retorno.Mensagem = "Não foi possível obter os andamentos de todos os processos informados.";
                 }
                 else
                 {
@@ -196,11 +177,6 @@ namespace DatajudClient.Domain.Services
                 x.Tribunal.Sigla.ToUpper().Contains(busca)
                 ||
                 x.Andamentos.Select(x => x.Descricao.ToUpper()).Any(x => x.Contains(busca)));
-
-                //processos.ForEach(x =>
-                //{
-                //    x.NumeroProcesso = x.GetNumeroFormatado();
-                //});
 
                 retorno.Dados = _mapper.Map<IEnumerable<ReadProcessoDTO>>(processos).ToList();
 
@@ -291,17 +267,29 @@ namespace DatajudClient.Domain.Services
 
         #region Métodos Privados
 
-        private async Task ProcessarRetornoDatajud(ResponseDatajudDTO respostaDatajud, Processo processo)
+        private async Task<bool> ProcessarRetornoDatajud(ResponseDatajudDTO respostaDatajud, Processo processo)
         {
-            if (respostaDatajud.hits.hits.Count == 0)
-                return;
+            var retorno = true;
 
-            await MapearAndamentosDoProcesso(respostaDatajud, processo);
+            try
+            {
+                if (respostaDatajud.hits.hits.Count() > 0)
+                {
+                    await MapearAndamentosDoProcesso(respostaDatajud, processo);
+                    processo.UltimoAndamento = processo.Andamentos != null ? processo.Andamentos.OrderByDescending(x => x.DataHora).FirstOrDefault().DataHora : DateTime.MinValue;
+                }
 
-            processo.UltimoAndamento = processo.Andamentos != null ? processo.Andamentos.OrderByDescending(x => x.DataHora).FirstOrDefault().DataHora : DateTime.MinValue;
-            processo.UltimaAtualizacao = DateTime.Now;
+                processo.UltimaAtualizacao = DateTime.Now;
 
-            await _processoRepository.SalvarAlteracoesAsync();
+                if (await _processoRepository.SalvarAlteracoesAsync() == 0)
+                    retorno = false;
+            }
+            catch (Exception)
+            {
+                retorno = false;
+            }
+
+            return retorno;
         }
 
         private async Task MapearAndamentosDoProcesso(ResponseDatajudDTO respostaDatajud, Processo processo)

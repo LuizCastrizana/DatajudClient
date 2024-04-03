@@ -1,7 +1,7 @@
 import { AndamentoProcesso } from './../../interfaces/processo/andamentoProcesso';
 import { Injectable } from "@angular/core";
 import { ReadProcessoDto } from "../../dtos/processo/readProcessoDto";
-import { Processo } from "../../interfaces/processo/processo";
+import { Processo } from "../../models/processo/processo";
 import { EstadoMapper } from "../endereco/estadoMapper";
 import { TribunalMapper } from '../tribunal/tribunalMapper';
 import { CreateProcessoDto } from '../../dtos/processo/createProcessoDto';
@@ -30,9 +30,9 @@ export class ProcessoMapper {
       estado: EstadoMapper.FromDto(Dto.Estado),
       tribunal: TribunalMapper.FromDto(Dto.Tribunal),
       Andamentos: Dto.Andamentos
-    }
+    } as Processo;
 
-    return processo;
+    return Object.assign(new Processo, processo);;
   }
 
   public static ToDto(processo: Processo): ReadProcessoDto {
