@@ -20,7 +20,7 @@
         </button>
       </div>
       <div class="col col-flexible">
-        <button title="Atualizar todos os processos" id="btnAtualizarTodosProcessos" class="btn" (click)="atualizarTodosProcessos()">
+        <button title="Atualizar processos selecionados" id="btnAtualizarSelecionados" class="btn" (click)="atualizarSelecionados()">
           <img src="../../../../assets/img/atualizar-icon.png">
         </button>
       </div>
@@ -30,6 +30,16 @@
     <table class="table ff-segoe-ui">
       <thead>
         <tr>
+          <th>
+            <div class="titulo-tabela">
+              <span class="chk-painel">
+                <label class="chk-container">
+                  <input type="checkbox" name="chkTodos" id="chkTodos" class="chk" (change)="selecionarTodos($event)">
+                  <span class="checkmark"></span>
+                </label>
+              </span>
+            </div>
+          </th>
           <th (click)="ordenarProcessos('Acoes')" id="thAcoes" class="campo-ordenacao">
             <div class="titulo-tabela">
               <span class="nome-campo">Ações</span>
@@ -71,6 +81,17 @@
       <tbody>
         @for(processo of DadosPaginados.Itens; track processo.id) {
           <tr>
+            <td>
+              <div calss="acoes">
+                <span class="chk-painel">
+                  <label class="chk-container">
+                    <input type="checkbox" name="chkProcesso" id="chkProcesso" class="chk" value="{{processo.id}}"
+                      (change)="selecionarProcesso($event, processo)" checked="{{processoSelecinado(processo)}}">
+                    <span class="checkmark"></span>
+                  </label>
+                </span>
+              </div>
+            </td>
             <td>
               <div class="acoes">
                 <button title="Editar" id="btnEditar" class="btn btn-painel" (click)="exibirModalFormulario(true, processo)">

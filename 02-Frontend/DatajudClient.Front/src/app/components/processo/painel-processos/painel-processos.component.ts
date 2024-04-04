@@ -33,6 +33,7 @@ export class PainelProcessosComponent {
   ProcessoAcao: Processo = { } as Processo;
   AcaoEditar: boolean = false;
   Processos: Processo[] = [];
+  ProcessosSelecionados: Processo[] = [];
   DadosModalExcluir: DadosModalExcluir = {} as DadosModalExcluir;
 
   constructor(
@@ -63,6 +64,7 @@ export class PainelProcessosComponent {
   buscarProcessos(): void {
     let busca = (document.getElementById("txtBusca") as HTMLInputElement).value;
     this.Processos = [];
+    this.ProcessosSelecionados = [];
     this.processoService.buscar(busca).subscribe({
       next: (respostaApi) => {
         respostaApi.dados.forEach(processoDto => {
@@ -73,6 +75,39 @@ export class PainelProcessosComponent {
         this.respostaApiService.tratarRespostaApi(err)
       }
     });
+  }
+
+  selecionarProcesso($event: any, processo: Processo) {
+    if ($event.target.checked) {
+      this.ProcessosSelecionados.push(processo);
+    } else {
+      this.ProcessosSelecionados = this.ProcessosSelecionados.filter(p => p.id != processo.id);
+    }
+  }
+
+  selecionarTodos($event: any) {
+    if ($event.target.checked) {
+      this.ProcessosSelecionados = this.Processos;
+    } else {
+      this.ProcessosSelecionados = [];
+    }
+
+    this.paginarProcessos();
+  }
+
+  processoSelecinado(processo: Processo): string {
+    let existe = this.ProcessosSelecionados.find(p => p.id == processo.id) != undefined;
+    return existe == true ? "checked" : "";
+  }
+
+  tratarCheckboxTodos() {
+    let chkTodos = document.getElementById('chkTodos') as HTMLInputElement;
+
+    if (this.DadosPaginados.Itens.every(processo => this.ProcessosSelecionados.find(p => p.id == processo.id) != undefined)) {
+      chkTodos.checked = true;
+    } else {
+      chkTodos.checked = false;
+    }
   }
 
   ordenarProcessos(nomeCampo?: string): void {
@@ -224,6 +259,8 @@ export class PainelProcessosComponent {
     });
 
     this.DadosPaginados.Itens = itensPagina.filter(item => item.Pagina == this.DadosPaginados.Pagina).map(item => item.Item);
+
+    this.tratarCheckboxTodos();
   }
 
   exibirModalExcluir(processo: Processo) {
@@ -311,8 +348,8 @@ export class PainelProcessosComponent {
     });
   }
 
-  atualizarTodosProcessos(): void {
-    let numeros = this.Processos.map(processo => processo.numeroProcesso);
+  atualizarSelecionados(): void {
+    let numeros = this.ProcessosSelecionados.map(processo => processo.numeroProcesso);
     let UpdateProcessoDto = { Numeros: numeros } as UpdateProcessoDto;
     this.processoService.atualizar(UpdateProcessoDto).subscribe({
       next: (respostaApi) => {
@@ -335,6 +372,7 @@ export class PainelProcessosComponent {
       Mensagem: "Iniciando atualização dos processos."
     } as DadosFeedbackPopUp;
     this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+    this.buscarProcessos();
   }
 
 }
