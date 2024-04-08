@@ -12,6 +12,7 @@ import { ProcessoMapper } from '../../../mappers/processo/processoMapper';
 import { ItemPagina } from '../../../interfaces/shared/paginacao/itemPagina';
 import { DadosModalExcluir } from '../../../interfaces/shared/dadosModalExcluir';
 import { CreateProcessoDto } from '../../../dtos/processo/createProcessoDto';
+import { DeleteProcessoDto } from '../../../dtos/processo/deleteProcessoDto';
 
 @Component({
   selector: 'app-painel-processos',
@@ -33,6 +34,7 @@ export class PainelProcessosComponent {
   ProcessoAcao: Processo = { } as Processo;
   AcaoEditar: boolean = false;
   Processos: Processo[] = [];
+  ProcessosSelecionados: Processo[] = [];
   DadosModalExcluir: DadosModalExcluir = {} as DadosModalExcluir;
 
   constructor(
@@ -48,6 +50,7 @@ export class PainelProcessosComponent {
           this.Processos.push(ProcessoMapper.FromDto(processoDto));
         });
         this.ordenarProcessos();
+        this.oculatarSpinner();
       }, error: (err) => {
         let dadosFeedback = {
           Id: "feedback1",
@@ -56,23 +59,62 @@ export class PainelProcessosComponent {
           Mensagem: "Não foi possível obter os processos."
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+        this.oculatarSpinner();
       }
     });
+    this.exibirSpinner();
   }
 
   buscarProcessos(): void {
     let busca = (document.getElementById("txtBusca") as HTMLInputElement).value;
     this.Processos = [];
+    this.ProcessosSelecionados = [];
     this.processoService.buscar(busca).subscribe({
       next: (respostaApi) => {
         respostaApi.dados.forEach(processoDto => {
           this.Processos.push(ProcessoMapper.FromDto(processoDto));
         });
         this.ordenarProcessos();
+        this.oculatarSpinner();
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
+        this.oculatarSpinner();
       }
     });
+    this.exibirSpinner();
+  }
+
+  selecionarProcesso($event: any, processo: Processo) {
+    if ($event.target.checked) {
+      this.ProcessosSelecionados.push(processo);
+    } else {
+      this.ProcessosSelecionados = this.ProcessosSelecionados.filter(p => p.id != processo.id);
+    }
+  }
+
+  selecionarTodos($event: any) {
+    if ($event.target.checked) {
+      this.ProcessosSelecionados = this.Processos;
+    } else {
+      this.ProcessosSelecionados = [];
+    }
+
+    this.paginarProcessos();
+  }
+
+  processoSelecinado(processo: Processo): string {
+    let existe = this.ProcessosSelecionados.find(p => p.id == processo.id) != undefined;
+    return existe == true ? "checked" : "";
+  }
+
+  tratarCheckboxTodos() {
+    let chkTodos = document.getElementById('chkTodos') as HTMLInputElement;
+
+    if (this.DadosPaginados.Itens.every(processo => this.ProcessosSelecionados.find(p => p.id == processo.id) != undefined)) {
+      chkTodos.checked = true;
+    } else {
+      chkTodos.checked = false;
+    }
   }
 
   ordenarProcessos(nomeCampo?: string): void {
@@ -224,32 +266,49 @@ export class PainelProcessosComponent {
     });
 
     this.DadosPaginados.Itens = itensPagina.filter(item => item.Pagina == this.DadosPaginados.Pagina).map(item => item.Item);
+
+    this.tratarCheckboxTodos();
   }
 
-  exibirModalExcluir(processo: Processo) {
-    this.ProcessoAcao = processo;
-    this.DadosModalExcluir = {
-      NomeRegistro: "Processo nº: " + processo.numeroProcesso,
-      IdRegistro: processo.id
+  exibirModalExcluir(processo?: Processo) {
+    if (processo == undefined) {
+      this.DadosModalExcluir = {
+        NomeRegistro: "",
+        IdRegistro: 0,
+        ExcluirMuitos: true
+      }
+    } else {
+        this.ProcessoAcao = processo;
+        this.DadosModalExcluir = {
+        NomeRegistro: "Processo nº: " + processo.getNumeroProcessoFormatado(),
+        IdRegistro: processo.id,
+        ExcluirMuitos: false
+      }
     }
     document.getElementById('modalExcluir')!.style.display = 'block';
   }
 
   receiveMessageExcluir($event: DadosModalExcluir) {
     this.DadosModalExcluir = $event;
-    this.processoService.excluir(ProcessoMapper.ToDeleteDto(this.ProcessoAcao)).subscribe({
-      next: (retornoApi) => {
-        this.respostaApiService.tratarRespostaApi(retornoApi);
-        this.buscarProcessos();
-        document.getElementById('modalExcluir')!.style.display = 'none';
-        window.scroll(0,0);
-      },
-      error: (err) => {
-        this.respostaApiService.tratarRespostaApi(err);
-        document.getElementById('modalExcluir')!.style.display = 'none';
-        window.scroll(0,0);FeedbackService
-      }
-    });
+    if (this.DadosModalExcluir.ExcluirMuitos) {
+      this.excluirSelecionados();
+      document.getElementById('modalExcluir')!.style.display = 'none';
+      window.scroll(0,0);
+    } else {
+      this.processoService.excluir(ProcessoMapper.ToDeleteDto(this.ProcessoAcao)).subscribe({
+        next: (retornoApi) => {
+          this.respostaApiService.tratarRespostaApi(retornoApi);
+          this.buscarProcessos();
+          document.getElementById('modalExcluir')!.style.display = 'none';
+          window.scroll(0,0);
+        },
+        error: (err) => {
+          this.respostaApiService.tratarRespostaApi(err);
+          document.getElementById('modalExcluir')!.style.display = 'none';
+          window.scroll(0,0);
+        }
+      });
+    }
   }
 
   exibirModalFormulario(Edicao: boolean, ProcessoAcao?: Processo) {
@@ -305,14 +364,19 @@ export class PainelProcessosComponent {
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
         this.buscarProcessos();
+        this.oculatarSpinner();
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
+        this.buscarProcessos();
+        this.oculatarSpinner();
       }
     });
+    this.buscarProcessos();
+    this.oculatarSpinner();
   }
 
-  atualizarTodosProcessos(): void {
-    let numeros = this.Processos.map(processo => processo.numeroProcesso);
+  atualizarSelecionados(): void {
+    let numeros = this.ProcessosSelecionados.map(processo => processo.numeroProcesso);
     let UpdateProcessoDto = { Numeros: numeros } as UpdateProcessoDto;
     this.processoService.atualizar(UpdateProcessoDto).subscribe({
       next: (respostaApi) => {
@@ -324,8 +388,11 @@ export class PainelProcessosComponent {
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
         this.buscarProcessos();
+        this.oculatarSpinner();
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
+        this.buscarProcessos();
+        this.oculatarSpinner();
       }
     });
     let dadosFeedback = {
@@ -335,6 +402,59 @@ export class PainelProcessosComponent {
       Mensagem: "Iniciando atualização dos processos."
     } as DadosFeedbackPopUp;
     this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+    this.buscarProcessos();
+    this.exibirSpinner();
+  }
+
+  excluirSelecionados(): void {
+    let ids = this.ProcessosSelecionados.map(processo => processo.id);
+    if (ids.length == 0) {
+      let dadosFeedback = {
+        Id: "feedback1",
+        TipoFeedback: TipoFeedbackEnum.Atencao,
+        Titulo: "Atenção!",
+        Mensagem: "Nenhum processo selecionado para exclusão."
+      } as DadosFeedbackPopUp;
+      this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+      return;
+    }
+    let DeleteProcessoDto = { Ids: ids } as DeleteProcessoDto;
+    this.processoService.excluir(DeleteProcessoDto).subscribe({
+      next: (respostaApi) => {
+        let dadosFeedback = {
+          Id: "feedback1",
+          TipoFeedback: TipoFeedbackEnum.Sucesso,
+          Titulo: "Sucesso!",
+          Mensagem: "Processos excluídos com sucesso."
+        } as DadosFeedbackPopUp;
+        this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+        this.buscarProcessos();
+        this.oculatarSpinner();
+      }, error: (err) => {
+        this.respostaApiService.tratarRespostaApi(err)
+        this.buscarProcessos();
+        this.oculatarSpinner();
+      }
+    });
+    let dadosFeedback = {
+      Id: "feedback1",
+      TipoFeedback: TipoFeedbackEnum.Sucesso,
+      Titulo: "Sucesso!",
+      Mensagem: "Iniciando exclusão dos processos."
+    } as DadosFeedbackPopUp;
+    this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+    this.buscarProcessos();
+    this.exibirSpinner();
+  }
+
+  exibirSpinner() {
+    let spinner = document.getElementById('spinner') as HTMLDivElement;
+    spinner.style.display = 'inline-block';
+  }
+
+  oculatarSpinner() {
+    let spinner = document.getElementById('spinner') as HTMLDivElement;
+    spinner.style.display = 'none';
   }
 
 }

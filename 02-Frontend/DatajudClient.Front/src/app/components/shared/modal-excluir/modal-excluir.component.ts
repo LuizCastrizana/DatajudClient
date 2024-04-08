@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { DadosModalExcluir } from '../../../interfaces/shared/dadosModalExcluir';
 
 @Component({
@@ -8,8 +8,24 @@ import { DadosModalExcluir } from '../../../interfaces/shared/dadosModalExcluir'
 })
 export class ModalExcluirComponent {
 
-  @Input() DadosModalExcluir: DadosModalExcluir = {} as DadosModalExcluir;
+  private _dadosModalExcluir: DadosModalExcluir = {} as DadosModalExcluir;
+
+  @Input() set DadosModalExcluir(value: DadosModalExcluir) {
+    this._dadosModalExcluir = value;
+    if (this.DadosModalExcluir.ExcluirMuitos) {
+      this.DadosModalExcluir.NomeRegistro = "";
+      this.mensagem = `Deseja realmente excluir os registros selecionados`;
+    } else {
+      this.mensagem = `Deseja realmente excluir o registro: `;
+    }
+  }
+  get DadosModalExcluir(): DadosModalExcluir {
+    return this._dadosModalExcluir;
+  }
+
   @Output() ExcluirRegistro = new EventEmitter<DadosModalExcluir>();
+
+  mensagem: string = '';
 
   constructor() { }
 

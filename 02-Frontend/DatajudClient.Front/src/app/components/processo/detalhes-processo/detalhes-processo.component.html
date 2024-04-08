@@ -33,7 +33,7 @@
           <span class="nome-campo"><strong>Último andamento:</strong></span>
         </div>
         <div class="valor-campo">
-          <span>{{Processo.ultimoAndamento}} - {{Processo.ultimoAndamentoDescricao}}</span>
+          <span>{{Processo.ultimoAndamento | date : 'dd/MM/yyyy H:mm'}} - {{Processo.ultimoAndamentoDescricao}}</span>
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@
             <td>{{andamento.Codigo}}</td>
             <td>{{andamento.Descricao}}</td>
             <td>{{andamento.ComplementosDescricao}}</td>
-            <td>{{andamento.DataHora | date : 'dd/MM/yyyy hh:mm'}}</td>
+            <td>{{andamento.DataHora | date : 'dd/MM/yyyy H:mm'}}</td>
           </tr>
         }
       </tbody>
