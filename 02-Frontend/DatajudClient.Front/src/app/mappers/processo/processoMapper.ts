@@ -94,7 +94,7 @@ export class ProcessoMapper {
 
   public static ToDeleteDto(processo: Processo): DeleteProcessoDto {
     let processoDto: DeleteProcessoDto = {
-      Ids: [processo.id.toString()]
+      Ids: [processo.id]
     }
     return processoDto;
   }

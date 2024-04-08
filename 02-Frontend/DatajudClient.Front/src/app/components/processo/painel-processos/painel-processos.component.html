@@ -1,6 +1,7 @@
 <div class="container main">
   <div class="titulo-pagina ff-segoe-ui">
     <h1>Processos</h1>
+    <div class="lds-ring" id="spinner"><div></div><div></div><div></div><div></div></div>
   </div>
   <div class="menu-painel conteudo-pagina">
     <div class="row">
@@ -15,13 +16,18 @@
         </div>
       </div>
       <div class="col col-flexible">
-        <button title="Novo Processo" id="btnNovoProcesso" class="btn" (click)="exibirModalFormulario(false)">
+        <button title="Incluir Processo" id="btnIncluirProcesso" class="btn" (click)="exibirModalFormulario(false)">
           <img src="../../../../assets/img/plus-icon.png">
         </button>
       </div>
       <div class="col col-flexible">
         <button title="Atualizar processos selecionados" id="btnAtualizarSelecionados" class="btn" (click)="atualizarSelecionados()">
           <img src="../../../../assets/img/atualizar-icon.png">
+        </button>
+      </div>
+      <div class="col col-flexible">
+        <button title="Excluir processos selecionados" id="btnExcluirSelecionados" class="btn" (click)="exibirModalExcluir()">
+          <img src="../../../../assets/img/lixeira-icon.png">
         </button>
       </div>
     </div>
@@ -113,8 +119,8 @@
             <td>{{processo.getNumeroProcessoFormatado()}}</td>
             <td>{{processo.nomeCaso}}</td>
             <td>{{processo.tribunal.sigla}} - {{processo.tribunal.nome}}</td>
-            <td>{{processo.ultimoAndamento | date : 'dd/MM/yyyy hh:mm'}} - {{processo.ultimoAndamentoDescricao}}</td>
-            <td>{{processo.ultimaAtualizacao | date : 'dd/MM/yyyy hh:mm'}}</td>
+            <td>{{processo.ultimoAndamento | date : 'dd/MM/yyyy H:mm'}} - {{processo.ultimoAndamentoDescricao}}</td>
+            <td>{{processo.ultimaAtualizacao | date : 'dd/MM/yyyy H:mm'}}</td>
           </tr>
         }
       </tbody>
