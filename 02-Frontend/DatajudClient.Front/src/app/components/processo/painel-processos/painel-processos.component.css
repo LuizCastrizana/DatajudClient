@@ -24,9 +24,6 @@
 .acoes > .btn-painel:last-child {
   margin-right: 0;
 }
-#spinner {
-  display: none;
-  vertical-align: middle;
-  padding-left: 0.8rem;
-  color: #b84949;
+.titulo-pagina > .titulo {
+  margin-right: 0.8rem;
 }

@@ -1,6 +1,6 @@
 import { UpdateProcessoDto } from './../../../dtos/processo/updateProcessoDto';
 import { RespostaApiService } from './../../../services/shared/resposta-api.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { DadosPaginador } from '../../../interfaces/shared/paginacao/dadosPaginador';
 import { Processo } from '../../../models/processo/processo';
 import { DadosPaginados } from '../../../interfaces/shared/paginacao/dadosPaginados';
@@ -13,6 +13,8 @@ import { ItemPagina } from '../../../interfaces/shared/paginacao/itemPagina';
 import { DadosModalExcluir } from '../../../interfaces/shared/dadosModalExcluir';
 import { CreateProcessoDto } from '../../../dtos/processo/createProcessoDto';
 import { DeleteProcessoDto } from '../../../dtos/processo/deleteProcessoDto';
+import { DOCUMENT } from '@angular/common';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-painel-processos',
@@ -41,6 +43,8 @@ export class PainelProcessosComponent {
     private processoService: ProcessoService,
     private feedbackService: FeedbackService,
     private respostaApiService: RespostaApiService,
+    private spinnerComponent: SpinnerComponent,
+    @Inject(DOCUMENT) private document: Document
   ) { }
 
   ngOnInit(): void {
@@ -50,7 +54,7 @@ export class PainelProcessosComponent {
           this.Processos.push(ProcessoMapper.FromDto(processoDto));
         });
         this.ordenarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }, error: (err) => {
         let dadosFeedback = {
           Id: "feedback1",
@@ -59,14 +63,14 @@ export class PainelProcessosComponent {
           Mensagem: "Não foi possível obter os processos."
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }
     });
-    this.exibirSpinner();
+    this.spinnerComponent.exibirSpinner('spinner1');
   }
 
   buscarProcessos(): void {
-    let busca = (document.getElementById("txtBusca") as HTMLInputElement).value;
+    let busca = (this.document.getElementById("txtBusca") as HTMLInputElement).value;
     this.Processos = [];
     this.ProcessosSelecionados = [];
     this.processoService.buscar(busca).subscribe({
@@ -75,13 +79,13 @@ export class PainelProcessosComponent {
           this.Processos.push(ProcessoMapper.FromDto(processoDto));
         });
         this.ordenarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }
     });
-    this.exibirSpinner();
+    this.spinnerComponent.exibirSpinner('spinner1');
   }
 
   selecionarProcesso($event: any, processo: Processo) {
@@ -108,7 +112,7 @@ export class PainelProcessosComponent {
   }
 
   tratarCheckboxTodos() {
-    let chkTodos = document.getElementById('chkTodos') as HTMLInputElement;
+    let chkTodos = this.document.getElementById('chkTodos') as HTMLInputElement;
 
     if (this.DadosPaginados.Itens.every(processo => this.ProcessosSelecionados.find(p => p.id == processo.id) != undefined)) {
       chkTodos.checked = true;
@@ -190,11 +194,11 @@ export class PainelProcessosComponent {
   tratarIconeOrdenacao() {
     let imgAsc = "<img src=\"../../../../assets/img/asc.png\" >";
     let imgDesc = "<img src=\"../../../../assets/img/desc.png\" >";
-    let imgNumeroProcesso = document.getElementById('imgNumeroProcesso');
-    let imgNomeCaso = document.getElementById('imgNomeCaso');
-    let imgTribunal = document.getElementById('imgTribunal');
-    let imgUltimoAndamento = document.getElementById('imgUltimoAndamento');
-    let imgUltimaAtualizacao = document.getElementById('imgUltimaAtualizacao');
+    let imgNumeroProcesso = this.document.getElementById('imgNumeroProcesso');
+    let imgNomeCaso = this.document.getElementById('imgNomeCaso');
+    let imgTribunal = this.document.getElementById('imgTribunal');
+    let imgUltimoAndamento = this.document.getElementById('imgUltimoAndamento');
+    let imgUltimaAtualizacao = this.document.getElementById('imgUltimaAtualizacao');
 
     imgNumeroProcesso!.innerHTML = '';
     imgNomeCaso!.innerHTML = '';
@@ -285,26 +289,26 @@ export class PainelProcessosComponent {
         ExcluirMuitos: false
       }
     }
-    document.getElementById('modalExcluir')!.style.display = 'block';
+    this.document.getElementById('modalExcluir')!.style.display = 'block';
   }
 
   receiveMessageExcluir($event: DadosModalExcluir) {
     this.DadosModalExcluir = $event;
     if (this.DadosModalExcluir.ExcluirMuitos) {
       this.excluirSelecionados();
-      document.getElementById('modalExcluir')!.style.display = 'none';
+      this.document.getElementById('modalExcluir')!.style.display = 'none';
       window.scroll(0,0);
     } else {
       this.processoService.excluir(ProcessoMapper.ToDeleteDto(this.ProcessoAcao)).subscribe({
         next: (retornoApi) => {
           this.respostaApiService.tratarRespostaApi(retornoApi);
           this.buscarProcessos();
-          document.getElementById('modalExcluir')!.style.display = 'none';
+          this.document.getElementById('modalExcluir')!.style.display = 'none';
           window.scroll(0,0);
         },
         error: (err) => {
           this.respostaApiService.tratarRespostaApi(err);
-          document.getElementById('modalExcluir')!.style.display = 'none';
+          this.document.getElementById('modalExcluir')!.style.display = 'none';
           window.scroll(0,0);
         }
       });
@@ -314,7 +318,7 @@ export class PainelProcessosComponent {
   exibirModalFormulario(Edicao: boolean, ProcessoAcao?: Processo) {
     this.ProcessoAcao = ProcessoAcao != undefined ? ProcessoAcao : ({} as Processo);
     this.AcaoEditar = Edicao;
-    document.getElementById('modalFormularioProcesso')!.style.display = 'block';
+    this.document.getElementById('modalFormularioProcesso')!.style.display = 'block';
   }
 
   receiveMessageFormulario($eventEdicao: boolean) {
@@ -346,7 +350,7 @@ export class PainelProcessosComponent {
             }
           });
     }
-    document.getElementById('modalFormularioProcesso')!.style.display = 'none';
+    this.document.getElementById('modalFormularioProcesso')!.style.display = 'none';
     window.scroll(0,0);
   }
 
@@ -364,15 +368,14 @@ export class PainelProcessosComponent {
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
         this.buscarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
         this.buscarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }
     });
-    this.buscarProcessos();
-    this.oculatarSpinner();
+    this.spinnerComponent.exibirSpinner('spinner1');
   }
 
   atualizarSelecionados(): void {
@@ -388,11 +391,11 @@ export class PainelProcessosComponent {
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
         this.buscarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
         this.buscarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }
     });
     let dadosFeedback = {
@@ -402,8 +405,7 @@ export class PainelProcessosComponent {
       Mensagem: "Iniciando atualização dos processos."
     } as DadosFeedbackPopUp;
     this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
-    this.buscarProcessos();
-    this.exibirSpinner();
+    this.spinnerComponent.exibirSpinner('spinner1');
   }
 
   excluirSelecionados(): void {
@@ -429,11 +431,11 @@ export class PainelProcessosComponent {
         } as DadosFeedbackPopUp;
         this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
         this.buscarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }, error: (err) => {
         this.respostaApiService.tratarRespostaApi(err)
         this.buscarProcessos();
-        this.oculatarSpinner();
+        this.spinnerComponent.oculatarSpinner('spinner1');
       }
     });
     let dadosFeedback = {
@@ -443,18 +445,7 @@ export class PainelProcessosComponent {
       Mensagem: "Iniciando exclusão dos processos."
     } as DadosFeedbackPopUp;
     this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
-    this.buscarProcessos();
-    this.exibirSpinner();
-  }
-
-  exibirSpinner() {
-    let spinner = document.getElementById('spinner') as HTMLDivElement;
-    spinner.style.display = 'inline-block';
-  }
-
-  oculatarSpinner() {
-    let spinner = document.getElementById('spinner') as HTMLDivElement;
-    spinner.style.display = 'none';
+    this.spinnerComponent.exibirSpinner('spinner1');
   }
 
 }

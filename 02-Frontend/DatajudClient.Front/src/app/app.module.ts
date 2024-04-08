@@ -20,6 +20,7 @@ import { PainelProcessosComponent } from './components/processo/painel-processos
 import { ModalFormularioProcessoComponent } from './components/processo/modal-formulario/modal-formulario.component';
 import { DetalhesProcessoComponent } from './components/processo/detalhes-processo/detalhes-processo.component';
 import { ModalComplementosComponent } from './components/processo/modal-complementos/modal-complementos.component';
+import { SpinnerComponent } from './components/shared/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ModalComplementosComponent } from './components/processo/modal-compleme
     ModalFormularioProcessoComponent,
     DetalhesProcessoComponent,
     ModalComplementosComponent,
+    SpinnerComponent,
   ],
   imports: [
     CommonModule,
