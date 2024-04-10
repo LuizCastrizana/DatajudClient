@@ -1,3 +1,4 @@
+import { SpinnerComponent } from './../../shared/spinner/spinner.component';
 import { AndamentoProcesso } from './../../../interfaces/processo/andamentoProcesso';
 import { Processo } from './../../../models/processo/processo';
 import { Component } from '@angular/core';
@@ -9,6 +10,10 @@ import { DadosPaginados } from '../../../interfaces/shared/paginacao/dadosPagina
 import { ProcessoMapper } from '../../../mappers/processo/processoMapper';
 import { ItemPagina } from '../../../interfaces/shared/paginacao/itemPagina';
 import { Tribunal } from '../../../interfaces/tribunal/tribunal';
+import { DadosFeedbackPopUp } from '../../../interfaces/shared/dadosFeedbackPopUp';
+import { TipoFeedbackEnum } from '../../../enums/tipoFeedbackEnum';
+import { UpdateProcessoDto } from '../../../dtos/processo/updateProcessoDto';
+import { FeedbackService } from '../../../services/shared/feedback.service';
 
 @Component({
   selector: 'app-detalhes-processo',
@@ -37,34 +42,46 @@ export class DetalhesProcessoComponent {
     private processoService: ProcessoService,
     private respostaApiService: RespostaApiService,
     private Router: Router,
-    private ActivatedRoute: ActivatedRoute
+    private ActivatedRoute: ActivatedRoute,
+    private spinnerComponent: SpinnerComponent,
+    private feedbackService: FeedbackService
   ) { }
 
   ngOnInit() {
     this.Id = this.ActivatedRoute.snapshot.paramMap.get('id');
+    this.obterDadosProcesso();
+  }
+
+  obterDadosProcesso(): void {
     this.processoService.buscarPorId(this.Id!).subscribe({
       next: (resposta) => {
         this.Processo = ProcessoMapper.FromDto(resposta.dados);
-        this.ordenarAndamentos("Data");
+        this.ordenarAndamentos("Data", "desc");
+        this.spinnerComponent.oculatarSpinner('spinnerAndamentos');
       },
       error:(error) => {
         this.respostaApiService.tratarRespostaApi(error);
         this.Router.navigate(['/processos']);
       }
     });
+    this.spinnerComponent.exibirSpinner('spinnerAndamentos');
   }
 
-  ordenarAndamentos(nomeCampo?: string): void {
-    if (nomeCampo == this.NomeCampo) {
-      if (this.Ordem == "desc") {
-        this.Ordem = "asc";
-      } else if (this.Ordem == "asc") {
-        this.Ordem = '';
-        this.NomeCampo = '';
-        nomeCampo = '';
-      }
+  ordenarAndamentos(nomeCampo?: string, ordem?: string): void {
+    if(ordem != null) {
+      this.Ordem = ordem;
     } else {
-      this.Ordem = '';
+      if (nomeCampo == this.NomeCampo) {
+        if (this.Ordem == "desc") {
+          this.Ordem = "asc";
+        } else if (this.Ordem == "asc") {
+          this.Ordem = '';
+          this.NomeCampo = '';
+          nomeCampo = '';
+        }
+      } else {
+        this.Ordem = '';
+      }
     }
 
     switch (nomeCampo) {
@@ -202,5 +219,30 @@ export class DetalhesProcessoComponent {
     this.paginarAndamentos();
   }
 
+  atualizarProcesso() {
+    let numeros: String[] = [];
+    numeros.push(this.Processo.numeroProcesso);
+    let UpdateProcessoDto = { Numeros: numeros } as UpdateProcessoDto;
+    this.processoService.atualizar(UpdateProcessoDto).subscribe({
+      next: (respostaApi) => {
+        let dadosFeedback = {
+          Id: "feedback1",
+          TipoFeedback: TipoFeedbackEnum.Sucesso,
+          Titulo: "Sucesso!",
+          Mensagem: "Processo atualizado com sucesso."
+        } as DadosFeedbackPopUp;
+        this.feedbackService.gerarFeedbackPopUp(dadosFeedback);
+        this.spinnerComponent.oculatarSpinner('spinnerAndamentos');
+        this.obterDadosProcesso();
+      }, error: (err) => {
+        this.respostaApiService.tratarRespostaApi(err)
+        this.spinnerComponent.oculatarSpinner('spinnerAndamentos');
+        this.obterDadosProcesso();
+      }
+    });
+    this.spinnerComponent.exibirSpinner('spinnerAndamentos');
+  }
+
   exibirComplementos(processoId: number){}
+
 }

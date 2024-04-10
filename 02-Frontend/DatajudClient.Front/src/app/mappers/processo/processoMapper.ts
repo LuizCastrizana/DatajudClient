@@ -32,7 +32,7 @@ export class ProcessoMapper {
       Andamentos: Dto.Andamentos
     } as Processo;
 
-    return Object.assign(new Processo, processo);;
+    return Object.assign(new Processo, processo);
   }
 
   public static ToDto(processo: Processo): ReadProcessoDto {

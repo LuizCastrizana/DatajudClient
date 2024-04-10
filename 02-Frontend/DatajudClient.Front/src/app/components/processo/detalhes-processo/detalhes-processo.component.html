@@ -1,10 +1,13 @@
 <div class="container main ff-segoe-ui">
   <div class="titulo-pagina">
-    <h2>Detalhes do processo</h2>
+    <h2 class="titulo">Detalhes do processo</h2>
+    <button title="Atualizar andamentos" id="btnAtualizarProcesso" class="btn btn-painel" (click)="atualizarProcesso()">
+      <img src="../../../../assets/img/atualizar-icon.png">
+    </button>
   </div>
   <div class="conteudo-pagina">
     <div class="row">
-      <div class="col col-3">
+      <div class="col col-4">
         <div class="titulo-campo">
           <span class="nome-campo"><strong>Número do processo:</strong></span>
         </div>
@@ -14,13 +17,23 @@
       </div>
       <div class="col col-3">
         <div class="titulo-campo">
-          <span class="nome-campo"><strong>Nome do caso:</strong></span>
+          <span class="nome-campo"><strong>Última atualização:</strong></span>
         </div>
         <div class="valor-campo">
-          <span>{{Processo.nomeCaso}}</span>
+          <span>{{Processo.ultimaAtualizacao | date : 'dd/MM/yyyy H:mm'}}</span>
         </div>
       </div>
-      <div class="col col-3">
+      <div class="col col-5">
+        <div class="titulo-campo">
+          <span class="nome-campo"><strong>Último andamento:</strong></span>
+        </div>
+        <div class="valor-campo">
+          <span>{{Processo.ultimoAndamento | date : 'dd/MM/yyyy H:mm'}} - {{Processo.ultimoAndamentoDescricao}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-4">
         <div class="titulo-campo">
           <span class="nome-campo"><strong>Tribunal:</strong></span>
         </div>
@@ -30,16 +43,25 @@
       </div>
       <div class="col col-3">
         <div class="titulo-campo">
-          <span class="nome-campo"><strong>Último andamento:</strong></span>
+          <span class="nome-campo"><strong>Comarca / vara:</strong></span>
         </div>
         <div class="valor-campo">
-          <span>{{Processo.ultimoAndamento | date : 'dd/MM/yyyy H:mm'}} - {{Processo.ultimoAndamentoDescricao}}</span>
+          <span>{{Processo.comarca}}/{{Processo.vara}}</span>
+        </div>
+      </div>
+      <div class="col col-5">
+        <div class="titulo-campo">
+          <span class="nome-campo"><strong>Nome do caso:</strong></span>
+        </div>
+        <div class="valor-campo">
+          <span>{{Processo.nomeCaso}}</span>
         </div>
       </div>
     </div>
   </div>
   <div class="titulo-pagina">
-    <h2>Andamentos</h2>
+    <h2 class="titulo titulo-andamentos">Andamentos</h2>
+    <app-spinner [id]="'spinnerAndamentos'"></app-spinner>
   </div>
   <div class="conteudo-pagina div-tabela">
     <table class="table">
@@ -51,25 +73,25 @@
               <span class="img-ordenacao" id="imgAcoes"></span>
             </div>
           </th> -->
-          <th (click)="ordenarAndamentos('Codigo')" id="thCodigo" class="campo-ordenacao">
+          <th (click)="ordenarAndamentos('Codigo')" id="thCodigo" class="campo-ordenacao codigo">
             <div class="titulo-tabela">
               <span class="nome-campo">Código</span>
               <span class="img-ordenacao" id="imgCodigo"></span>
             </div>
           </th>
-          <th (click)="ordenarAndamentos('Descricao')" id="thDescricao" class="campo-ordenacao">
+          <th (click)="ordenarAndamentos('Descricao')" id="thDescricao" class="campo-ordenacao complementos">
             <div class="titulo-tabela">
               <span class="nome-campo">Descrição</span>
               <span class="img-ordenacao" id="imgDescricao"></span>
             </div>
           </th>
-          <th (click)="ordenarAndamentos('Complementos')" id="thComplementos" class="campo-ordenacao">
+          <th (click)="ordenarAndamentos('Complementos')" id="thComplementos" class="campo-ordenacao complementos">
             <div class="titulo-tabela">
               <span class="nome-campo">Complementos</span>
               <span class="img-ordenacao" id="imgComplementos"></span>
             </div>
           </th>
-          <th (click)="ordenarAndamentos('Data')" id="thData" class="campo-ordenacao">
+          <th (click)="ordenarAndamentos('Data')" id="thData" class="campo-ordenacao th-dados">
             <div class="titulo-tabela">
               <span class="nome-campo">Data</span>
               <span class="img-ordenacao" id="imgData"></span>
@@ -87,7 +109,7 @@
                 </button>
               </div>
             </td> -->
-            <td>{{andamento.Codigo}}</td>
+            <td><strong>{{andamento.Codigo}}</strong></td>
             <td>{{andamento.Descricao}}</td>
             <td>{{andamento.ComplementosDescricao}}</td>
             <td>{{andamento.DataHora | date : 'dd/MM/yyyy H:mm'}}</td>
@@ -95,6 +117,6 @@
         }
       </tbody>
     </table>
-    <app-paginador [DadosPaginador]="DadosPaginador" (messageEvent)="receiveMessageDadosPaginador($event)"></app-paginador>
   </div>
+  <app-paginador [DadosPaginador]="DadosPaginador" (messageEvent)="receiveMessageDadosPaginador($event)"></app-paginador>
 </div>

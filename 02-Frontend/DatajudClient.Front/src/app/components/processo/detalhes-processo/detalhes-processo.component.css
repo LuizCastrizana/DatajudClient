@@ -1,9 +1,29 @@
-.div-tabela{
-  padding: 0.5rem;
+.div-tabela {
+  display: flex;
+  padding-bottom: 0.5rem;
+  overflow-y: auto;
+}
+.div-tabela .table {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
 }
 .coluna-acoes {
   width: 60px;
 }
-.table {
-  box-shadow: inherit;
+.titulo-pagina {
+  margin-bottom: 0.3rem;
+}
+.titulo-pagina > .titulo {
+  margin-right: 0.8rem;
+}
+.titulo-andamentos {
+  margin-bottom: 0 !important;
+}
+.complementos {
+  min-width: 200px;
+}
+.codigo {
+  min-width: none;
 }
