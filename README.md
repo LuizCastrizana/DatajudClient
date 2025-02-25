@@ -1,1 +1,1 @@
-# DatajudClient
+O DatajudClient é uma ferramenta de gerenciamento de processos jurídicos. Neste sistema o usuário pode cadastrar processos e obter os andamentos deste processo automaticamente através de uma integração com a API DataJud. Este projeto ainda está em desenvolvimento.
